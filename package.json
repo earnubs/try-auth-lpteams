@@ -1,0 +1,23 @@
+{
+  "name": "try-auth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Stephen Stewart <stephen.stewart@canonical.com>",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "connect-redis": "^3.0.1",
+    "cookie-parser": "^1.4.0",
+    "ejs": ">= 0.0.0",
+    "express": ">= 0.0.0",
+    "express-session": "^1.12.1",
+    "method-override": "^2.3.5",
+    "morgan": "^1.6.1",
+    "openid": "^1.0.0"
+  }
+}
