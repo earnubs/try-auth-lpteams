@@ -10,7 +10,6 @@
   "author": "Stephen Stewart <stephen.stewart@canonical.com>",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.14.1",
     "connect-redis": "^3.0.1",
     "cookie-parser": "^1.4.0",
     "ejs": ">= 0.0.0",

@@ -1,7 +1,6 @@
 var MacaroonsBuilder = require('macaroons.js').MacaroonsBuilder;
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
-var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var crypto = require('crypto');
 var express = require('express');
@@ -75,7 +74,6 @@ var app = express();
 app.set('view engine', 'ejs');
 app.use(morgan('combined'));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(methodOverride());
 app.use(session({
   store: new RedisStore({
