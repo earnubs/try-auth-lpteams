@@ -10,15 +10,14 @@
   "author": "Stephen Stewart <stephen.stewart@canonical.com>",
   "license": "ISC",
   "dependencies": {
-    "connect-redis": "^3.0.1",
-    "cookie-parser": "^1.4.0",
-    "ejs": ">= 0.0.0",
-    "express": ">= 0.0.0",
-    "express-session": "^1.12.1",
+    "connect-redis": "^3.1.0",
+    "ejs": "^2.4.2",
+    "express": "^4.14.0",
+    "express-session": "^1.13.0",
     "macaroons.js": "^0.3.6",
-    "method-override": "^2.3.5",
-    "morgan": "^1.6.1",
-    "openid": "^1.0.0",
+    "method-override": "^2.3.6",
+    "morgan": "^1.7.0",
+    "openid": "^2.0.1",
     "ursa": "^0.9.4"
   }
 }

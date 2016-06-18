@@ -1,7 +1,6 @@
 var MacaroonsBuilder = require('macaroons.js').MacaroonsBuilder;
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
-var cookieParser = require('cookie-parser');
 var crypto = require('crypto');
 var express = require('express');
 var fs = require('fs');
@@ -73,7 +72,6 @@ var app = express();
 //app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(morgan('combined'));
-app.use(cookieParser());
 app.use(methodOverride());
 app.use(session({
   store: new RedisStore({
@@ -132,6 +130,8 @@ app.post('/login/verify', function(request, response) {
     console.log(result);
     if (!error && result.authenticated) {
       request.session.name = result.fullname;
+      request.session.discharge = result.discharge;
+      request.session.teams = result.teams;
     }
     //console.log(result);
     response.redirect('/');
