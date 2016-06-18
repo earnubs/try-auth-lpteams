@@ -1,35 +1,71 @@
-var path = require('path');
-var express = require('express');
-var router = express.Router();
-var morgan = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
-var session = require('express-session')
+var MacaroonsBuilder = require('macaroons.js').MacaroonsBuilder;
+var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var crypto = require('crypto');
+var express = require('express');
+var fs = require('fs');
+var methodOverride = require('method-override');
+var morgan = require('morgan');
 var openid = require('openid');
-var util = require('util');
+var router = express.Router();
+var ursa = require('ursa');
+
 var Teams = require('./teams.js');
+var Macaroons = require('./macaroons.js');
 
 openid['LaunchpadTeams'] = Teams;
+openid['Macaroons'] = Macaroons;
+
+var key = fs.readFileSync('./sso_rsa_id.pub');
+
+var sso = ursa.openSshPublicKey(new Buffer(key.toString('utf8').slice(8), 'base64'));
+//var sso = ursa.createPublicKey(fs.readFileSync('./sso.pem'));
+
+/**
+var _createBaseMacaroon = function() {
+  var secret = new Buffer('39a630867921b61522892779c659934667606426402460f913c9171966e97775', 'hex');
+  var location = 'http://localhost:3000';
+  var macaroon = MacaroonsBuilder.create(location, secret, 'try-auth');
+
+  var caveatKey = "4; guaranteed random by a fair toss of the dice";
+  var payload = JSON.stringify({
+    version: 1,
+    secret: crt.encrypt(secret) 
+  });
+
+  macaroon = macaroon.add_third_party_caveat(
+    'login.staging.ubuntu.com', caveat_key, payload
+  ).getMacaroon();
+
+  return macaroon;
+};
+**/
 
 var relyingParty = new openid.RelyingParty(
     'http://localhost:3000/login/verify', // Verification URL (yours)
     'http://localhost:3000', // Realm (optional, specifies realm for OpenID authentication)
     false, // Use stateless verification
     false, // Strict mode
-    [new openid.SimpleRegistration(
-        {
-          "nickname" : true,
-          "email" : true,
-          "fullname" : true,
-          "language" : true,
-        }),
+    [new openid.SimpleRegistration({
+      'nickname' : true,
+      'email' : true,
+      'fullname' : true,
+      'language' : true
+    }),
     new openid.LaunchpadTeams({
       'teams': [
         'ubuntuone-hackers'
-        ]
-    })]
+      ]
+    }),
+    new openid.Macaroons({
+      'caveat_id': JSON.stringify({
+        'version': 1,
+        'secret': new Buffer(sso.encrypt(crypto.randomBytes(32))).toString('base64')
+      })
+    })
+    ]
 ); // List of extensions to enable and include
 
 var app = express();
@@ -39,7 +75,7 @@ var app = express();
 app.set('view engine', 'ejs');
 app.use(morgan('combined'));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(methodOverride());
 app.use(session({
   store: new RedisStore({
@@ -53,9 +89,9 @@ app.use(session({
 
 app.use(function (req, res, next) {
   if (!req.session) {
-    return next(new Error('oh no')) // handle error
+    return next(new Error('oh no')); // handle error
   }
-  next() // otherwise continue
+  next(); // otherwise continue
 });
 
 router.get('/', function(req, res){
@@ -90,17 +126,17 @@ router.get('/login/authenticate', function(request, response) {
   });
 });
 
-app.get('/login/verify', function(request, response) {
-  console.log(request);
+app.post('/login/verify', function(request, response) {
+
   // Verify identity assertion
   // NOTE: Passing just the URL is also possible
   relyingParty.verifyAssertion(request, function(error, result) {
+    console.log(result);
     if (!error && result.authenticated) {
       request.session.name = result.fullname;
     }
-    console.log(result);
+    //console.log(result);
     response.redirect('/');
-
   });
 });
 
