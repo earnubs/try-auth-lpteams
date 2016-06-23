@@ -1,47 +1,107 @@
-var MacaroonsBuilder = require('macaroons.js').MacaroonsBuilder;
-var session = require('express-session');
-var RedisStore = require('connect-redis')(session);
-var crypto = require('crypto');
-var express = require('express');
-var fs = require('fs');
-var methodOverride = require('method-override');
-var morgan = require('morgan');
-var openid = require('openid');
-var router = express.Router();
-var ursa = require('ursa');
+"use strict";
 
-var Teams = require('./teams.js');
-var Macaroons = require('./macaroons.js');
+const M = require('macaroons.js').MacaroonsBuilder;
+const MacaroonsVerifier = require('macaroons.js').MacaroonsVerifier;
+const MacaroonsConstants = require('macaroons.js').MacaroonsConstants;
+const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
+const crypto = require('crypto');
+const express = require('express');
+const fs = require('fs');
+const methodOverride = require('method-override');
+const morgan = require('morgan');
+const openid = require('openid');
+const router = express.Router();
+const ursa = require('ursa');
+const request = require('superagent');
+
+const Teams = require('./teams.js');
+const Macaroons = require('./macaroons.js');
+
+const key = fs.readFileSync('./sso_id_rsa.pub');
+const sso = ursa.openSshPublicKey(new Buffer(key.toString('utf8').slice(8), 'base64'));
+
+var MACAROON_SUGGESTED_SECRET_LENGTH = MacaroonsConstants.MACAROON_SUGGESTED_SECRET_LENGTH
 
 openid['LaunchpadTeams'] = Teams;
 openid['Macaroons'] = Macaroons;
 
-var key = fs.readFileSync('./sso_rsa_id.pub');
 
-var sso = ursa.openSshPublicKey(new Buffer(key.toString('utf8').slice(8), 'base64'));
-//var sso = ursa.createPublicKey(fs.readFileSync('./sso.pem'));
+let _verifySCAMacaroon = (discharge, root) => {
+  let auth = _macaroon_auth(root, discharge);
 
-/**
-var _createBaseMacaroon = function() {
-  var secret = new Buffer('39a630867921b61522892779c659934667606426402460f913c9171966e97775', 'hex');
-  var location = 'http://localhost:3000';
-  var macaroon = MacaroonsBuilder.create(location, secret, 'try-auth');
+  request
+    .post('https://myapps.developer.staging.ubuntu.com/dev/api/acl/verify/')
+    .send({
+      'auth_data': {
+        'http_uri': 'http://localhost:3000',
+        'http_method': 'POST',
+        'authorization': auth
+      }
+    })
+    .end((err,res) => {
+      if (err) {
+        console.log('error:', err);
+      };
+      console.log('verify response:', res.body);
+    })
+};
 
-  var caveatKey = "4; guaranteed random by a fair toss of the dice";
-  var payload = JSON.stringify({
-    version: 1,
-    secret: crt.encrypt(secret) 
+/** Format a macaroon and it's associated discharge
+ * @param {Object}
+ * @return {String} A string suitable to use in an Authorization header.
+**/
+let _macaroon_auth = (macaroon, discharge) => {
+
+  let macaroonObj = M.deserialize(macaroon);
+  let dischargeObj = M.deserialize(discharge);
+
+  let dischargeBound = M.modify(macaroonObj)
+    .prepare_for_request(dischargeObj)
+    .getMacaroon();
+
+  let auth = `macaroon root="${macaroon}", discharge="${dischargeBound.serialize()}"`;
+
+  return auth;
+};
+
+let extractCaveatId = (macaroon) => {
+  let m = M.deserialize(macaroon);
+  let caveatId;
+  m.inspect();
+
+  // if location is SSO, previous cid is the payload
+  // https://github.com/nitram509/macaroons.js/blob/master/lib/MacaroonsDeSerializer.js#L50
+
+  m.caveatPackets.some((packet, i) => {
+    if (packet.valueAsText === 'login.staging.ubuntu.com') {
+      return true;
+    }
+    if (packet.type === 3) {
+      caveatId = packet.valueAsText;
+    }
   });
 
-  macaroon = macaroon.add_third_party_caveat(
-    'login.staging.ubuntu.com', caveat_key, payload
-  ).getMacaroon();
-
-  return macaroon;
+  return caveatId;
 };
-**/
 
-var relyingParty = new openid.RelyingParty(
+let relyingParty;
+let macaroon;
+
+let _getSCAMacaroon = () => {
+  request
+    .post('https://myapps.developer.staging.ubuntu.com/dev/api/acl/')
+    .type('json')
+    .send({'permissions': ['package_access']})
+    .end((err, res) => {
+      macaroon = res.body.macaroon;
+      let caveatId = extractCaveatId(macaroon);
+      _setRelyingParty(caveatId);
+    });
+};
+
+let _setRelyingParty = (caveatId) => {
+  relyingParty = new openid.RelyingParty(
     'http://localhost:3000/login/verify', // Verification URL (yours)
     'http://localhost:3000', // Realm (optional, specifies realm for OpenID authentication)
     false, // Use stateless verification
@@ -58,18 +118,16 @@ var relyingParty = new openid.RelyingParty(
       ]
     }),
     new openid.Macaroons({
-      'caveat_id': JSON.stringify({
-        'version': 1,
-        'secret': new Buffer(sso.encrypt(crypto.randomBytes(32))).toString('base64')
-      })
+      'caveat_id': caveatId
     })
     ]
-); // List of extensions to enable and include
+  );
+};
 
-var app = express();
+_getSCAMacaroon();
 
-// configure Express
-//app.set('views', path.join(__dirname, 'views'));
+let app = express();
+
 app.set('view engine', 'ejs');
 app.use(morgan('combined'));
 app.use(methodOverride());
@@ -83,66 +141,66 @@ app.use(session({
   saveUninitialized: false
 }));
 
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   if (!req.session) {
     return next(new Error('oh no')); // handle error
   }
   next(); // otherwise continue
 });
 
-router.get('/', function(req, res){
-  var name;
+router.get('/', (req, res) => {
+  let name;
   if (req.session) {
     name = req.session.name;
   }
   res.render('index', { user: name });
 });
 
-router.get('/login', function(req, res){
+router.get('/login', (req, res) => {
   res.render('login', { user: req.user });
 });
 
-router.get('/login/authenticate', function(request, response) {
-  var identifier = 'https://login.staging.ubuntu.com/';
+router.get('/login/authenticate', (req, res) => {
+  let identifier = 'https://login.staging.ubuntu.com/';
 
   // Resolve identifier, associate, and build authentication URL
-  relyingParty.authenticate(identifier, false, function(error, authUrl) 	{
+  relyingParty.authenticate(identifier, false, (error, authUrl) => {
     if (error) {
-      response.writeHead(200);
-      response.end('Authentication failed: ' + error.message);
+      res.writeHead(200);
+      res.end('Authentication failed: ' + error.message);
     }
     else if (!authUrl) {
-      response.writeHead(200);
-      response.end('Authentication failed');
+      res.writeHead(200);
+      res.end('Authentication failed');
     }
     else {
-      response.writeHead(302, { Location: authUrl });
-      response.end();
+      res.writeHead(302, { Location: authUrl });
+      res.end();
     }
   });
 });
 
-app.post('/login/verify', function(request, response) {
-
+app.post('/login/verify', (req, res) => {
   // Verify identity assertion
   // NOTE: Passing just the URL is also possible
-  relyingParty.verifyAssertion(request, function(error, result) {
-    console.log(result);
+  relyingParty.verifyAssertion(req, (error, result) => {
     if (!error && result.authenticated) {
-      request.session.name = result.fullname;
-      request.session.discharge = result.discharge;
-      request.session.teams = result.teams;
+      req.session.name = result.fullname;
+      req.session.discharge = result.discharge;
+      req.session.teams = result.teams;
     }
-    //console.log(result);
-    response.redirect('/');
+    //console.log(M.deserialize(req.session.discharge));
+    _verifySCAMacaroon(req.session.discharge, macaroon);
+    //getSCAMacaroon(req.session.discharge);
+    res.redirect('/');
   });
 });
 
 app.use('/', router);
 
-var server = app.listen(3000, function() {
-  var host = server.address().address;
-  var port = server.address().port;
+const server = app.listen(3000, () => {
+  const host = server.address().address;
+  const port = server.address().port;
 
   console.log('try-auth app listening at http://%s:%s', host, port);
 });
