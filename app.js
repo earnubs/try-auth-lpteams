@@ -10,6 +10,7 @@ const RedisStore = require('connect-redis')(session);
 const util = require('util');
 
 const authRouter = require('./auth.js');
+const cpi = require('./lib/cpi');
 
 let app = express();
 
@@ -46,16 +47,18 @@ router.get('/', (req, res) => {
   res.render('index', { user: name });
 });
 
-router.get('/packages', (req, res) => {
-  request
-  .get('https://search.apps.ubuntu.com/api/v1/snaps/search')
-  .set('X-Ubuntu-Series', '16')
-  .set('Accept', 'application/hal+json')
-  .end((err, res2) => {
-    console.log(res2.body);
-    res.render('index');
-  })
+router.get('/api/search/:series/:channel/:name/:arch?', (req, res, next) => {
+  cpi.search(req.params.name, function(result) {
+    req.body = result;
+    next();
+  }, {
+    series: req.params.series,
+    arch: req.params.arch,
+    channel: req.params.channel
+  });
 
+}, function(req, res) {
+  res.send(req.body);
 });
 
 app.use('/', router);
