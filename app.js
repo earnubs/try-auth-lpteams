@@ -47,7 +47,7 @@ router.get('/', (req, res) => {
   res.render('index', { user: name });
 });
 
-router.get('/api/search/:series/:channel/:name/:arch?', (req, res, next) => {
+router.get('/api/search/:series/:channel/:name?/:arch?', (req, res, next) => {
   cpi.search(req.params.name, function(result) {
     req.body = result;
     next();
