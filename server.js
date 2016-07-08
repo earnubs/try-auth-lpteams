@@ -13,6 +13,7 @@ const authRouter = require('./auth.js');
 const cpi = require('./lib/cpi');
 
 let app = express();
+app.use(express.static('public'));
 
 nunjucks.configure('views', {
     autoescape: true,
