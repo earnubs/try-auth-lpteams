@@ -2,11 +2,13 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { selectQuery, fetchSnapsIfNeeded, invalidateQuery } from '../actions';
 import Snaps from '../components/Snaps'
+import Form from '../components/Form'
 
 
 class App extends Component {
   constructor(props) {
     super(props);
+    this.handleChange = this.handleChange.bind(this)
   }
 
   componentDidMount() {
@@ -14,7 +16,15 @@ class App extends Component {
     dispatch(fetchSnapsIfNeeded(selectedQuery))
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedQuery !== this.props.selectedQuery) {
+      const { dispatch, selectedQuery } = nextProps
+      dispatch(fetchSnapsIfNeeded(selectedQuery))
+    }
+  }
+
+  handleChange(nextQuery) {
+    this.props.dispatch(selectQuery(nextQuery))
   }
 
   render() {
@@ -23,6 +33,9 @@ class App extends Component {
 
     return (
       <div>
+      <Form value={selectedQuery}
+      onChange={this.handleChange}
+      />
       {isEmpty
           ? (isFetching ? <div>Loading...</div> : <div>Empty.</div>)
           : <div style={{ opacity: isFetching ? 0.5 : 1 }}>
