@@ -1,0 +1,10 @@
+:root {
+  background-color:#15202b;
+  color:#939da7;
+  font:normal normal 13px/1.5 Inconsolata, monospace;
+}
+
+.snap {
+  margin:1em;
+  padding:1em;
+}

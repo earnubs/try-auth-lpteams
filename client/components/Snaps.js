@@ -3,11 +3,18 @@ import React, { PropTypes, Component } from 'react';
 export default class Snaps extends Component {
   render() {
     return (
-      <ul>
+      <div>
       {this.props.snaps.map((snap, i) =>
-        <li key={i}>{snap.title}</li>
+        <div className='snap' key={i}>
+          <div>Title: {snap.title}</div>
+          <div>Summary: {snap.summary}</div>
+          <div>Publisher: {snap.publisher}</div>
+          <div>Revision: #{snap.revision}</div>
+          <div>Version: {snap.version}</div>
+          <div>ID: {snap.snap_id}</div>
+        </div>
       )}
-      </ul>
+      </div>
     )
   }
 }

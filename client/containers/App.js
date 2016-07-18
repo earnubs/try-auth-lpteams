@@ -21,12 +21,10 @@ class App extends Component {
     const { selectedQuery, snaps, isFetching, lastUpdated } = this.props;
     const isEmpty = (snaps.length === 0);
 
-    console.log(snaps);
-
     return (
       <div>
       {isEmpty
-          ? (isFetching ? <h2>Loading...</h2> : <h2>Empty.</h2>)
+          ? (isFetching ? <div>Loading...</div> : <div>Empty.</div>)
           : <div style={{ opacity: isFetching ? 0.5 : 1 }}>
         <Snaps snaps={snaps} />
         </div>
