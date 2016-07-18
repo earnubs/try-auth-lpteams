@@ -9,11 +9,20 @@ const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const util = require('util');
 
+const webpack = require('webpack')
+const webpackDevMiddleware = require('webpack-dev-middleware')
+const webpackHotMiddleware = require('webpack-hot-middleware')
+const config = require('./webpack.config')
+
 const authRouter = require('./auth.js');
 const cpi = require('./lib/cpi');
 
 let app = express();
 app.use(express.static('public'));
+
+const compiler = webpack(config)
+app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
+app.use(webpackHotMiddleware(compiler))
 
 nunjucks.configure('views', {
     autoescape: true,

@@ -24,7 +24,7 @@
     "normalizr": "^2.1.0",
     "nunjucks": "^2.4.2",
     "openid": "^2.0.1",
-    "react": "^15.2.0",
+    "react": "^15.2.1",
     "react-redux": "^4.4.5",
     "redux": "^3.5.2",
     "redux-logger": "^2.6.1",
