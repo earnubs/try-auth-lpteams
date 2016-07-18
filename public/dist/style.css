@@ -5,6 +5,12 @@
 }
 
 .snap {
-  margin:1em;
-  padding:1em;
+  margin:1em 0;
+}
+
+.search {
+  padding:0.6em;
+  background-color: #15202b;
+  border:1px solid #293f54;
+  color: #939da7;
 }

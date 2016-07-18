@@ -7,10 +7,10 @@ export default class Form extends Component {
     return (
       <div>
       <input
+      className='search'
       type='search'
       onChange={e => onChange(e.target.value)}
-      value={value}
-      placeholder='Snap name' />
+      value={value} />
       </div>
     )
   }
