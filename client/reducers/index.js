@@ -41,7 +41,7 @@ function selectedChannel(state=DEFAULT_CHANNEL, action) {
   }
 }
 
-function selectedQuery(state='vaca', action) {
+function selectedQuery(state='', action) {
   switch (action.type) {
     case SELECT_QUERY:
       return action.query

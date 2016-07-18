@@ -3,3 +3,9 @@ node_modules
 *.key.pem
 
 *.pub
+
+dist/bundle.js
+
+dist/bundle.js
+
+public/dist/bundle.js

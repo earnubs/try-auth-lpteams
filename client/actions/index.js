@@ -53,11 +53,10 @@ export function requestSnaps(query) {
 };
 
 export function receiveSnaps(query, json) {
-  console.log(json);
   return {
     type: RECEIVE_SNAPS,
     query,
-    snaps: json.result,
+    snaps: json,
     receivedAt: Date.now()
   }
 };
@@ -72,7 +71,6 @@ function fetchSnaps(query) {
 };
 
 function shouldFetchSnaps(state, query) {
-  console.log(state);
   const snaps = state.snapsByQuery[query];
 
   if (!snaps) {
