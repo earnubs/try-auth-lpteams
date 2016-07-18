@@ -28,11 +28,7 @@ class App extends Component {
       {isEmpty
           ? (isFetching ? <h2>Loading...</h2> : <h2>Empty.</h2>)
           : <div style={{ opacity: isFetching ? 0.5 : 1 }}>
-          <ul>
-          {snaps.map((snap, i) =>
-            <li>{snap.name}</li>
-          )}
-          </ul>
+        <Snaps snaps={snaps} />
         </div>
       }
       </div>
