@@ -2,23 +2,37 @@
 <html>
   <head>
     <title>Snaps</title>
-    <link rel=stylesheet href="/dist/style.css">
+    <style>
+      :root {
+        background-color:#0c0c0c;
+        color:#f8ffff;
+        font:normal normal 14px/1.5 'Blender Pro', 'Arial', 'Helvetica', sans-serif;
+        letter-spacing:1px;
+        padding: 0;
+        margin: 0;
+      }
+
+      body {
+        margin:0;
+        padding:0;
+      }
+    </style>
   </head>
   <body>
     {% if not user %}
     <p>
-    <a href="/">Home</a> | 
+    <a href="/">Home</a> |
     <a href="/login">Log In</a>
     </p>
     {% else %}
     <p>
-    <a href="/">Home</a> | 
-    <a href="/account">Account</a> | 
+    <a href="/">Home</a> |
+    <a href="/account">Account</a> |
     <a href="/logout">Log Out</a>
     </p>
     {% endif %}
     {% block content %}{% endblock %}
     <div id="root"></div>
-    <script src="/dist/bundle.js"></script>
+    <script src="/static/bundle.js"></script>
   </body>
 </html>

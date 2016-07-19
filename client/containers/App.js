@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { selectQuery, fetchSnapsIfNeeded, invalidateQuery } from '../actions';
-import Snaps from '../components/Snaps'
-import Form from '../components/Form'
-
+import Snaps from '../components/Snaps';
+import Form from '../components/Form';
+import style from './App.css';
 
 class App extends Component {
   constructor(props) {
@@ -32,7 +32,7 @@ class App extends Component {
     const isEmpty = (snaps.length === 0);
 
     return (
-      <div>
+      <div className={style.app}>
       <Form value={selectedQuery}
       onChange={this.handleChange}
       />
