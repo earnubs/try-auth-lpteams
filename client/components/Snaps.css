@@ -1,24 +1,22 @@
 .snap {
   margin:1rem 0;
   padding:1rem 0;
-  background-color: #18282b;
 }
 
 .key {
-  color: #5ed7ea;
-  padding-right:3ex;
+  padding-right:2rem;
   width: 100px;
   display:inline-block;
   text-align:right;
+  color: #aabbbb;
 }
 
 .value {
 }
 
 .row {
-  background-color: #1c2224
 }
 
 .hilite {
-  color: #fffed2;
+  font-size: 28px;
 }
