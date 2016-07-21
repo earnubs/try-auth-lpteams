@@ -6,10 +6,10 @@ export default class Snaps extends Component {
     return (
       <div className={style.row}>
       {this.props.snaps.map((snap, i) =>
-        <div className={style.snap} key={i}>
+        <a className={style.snap} key={i} href={'/snaps/' + snap.snap_id}>
           <div className={style.hilite}>
           <span className={style.key}>#{snap.revision}</span>
-          <span className={style.value}>{snap.title} {snap.version}</span>
+          <span className={style.value}>{snap.title} <i>{'v'+snap.version}</i></span>
           </div>
           <div>
           <span className={style.key}>Summary</span>
@@ -23,7 +23,7 @@ export default class Snaps extends Component {
           <span className={style.key}>ID</span>
           <span className={style.value}>{snap.snap_id}</span>
           </div>
-        </div>
+        </a>
       )}
       </div>
     )

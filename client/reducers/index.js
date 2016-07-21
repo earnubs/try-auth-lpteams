@@ -41,7 +41,7 @@ function selectedChannel(state=DEFAULT_CHANNEL, action) {
   }
 }
 
-function selectedQuery(state='', action) {
+function selectedQuery(state='?', action) {
   switch (action.type) {
     case SELECT_QUERY:
       return action.query
@@ -94,7 +94,8 @@ function snapsByQuery(state = {}, action) {
 
 const rootReducer = combineReducers({
   snapsByQuery,
-  selectedQuery
+  selectedQuery,
+  selectedArch
 })
 
 export default rootReducer

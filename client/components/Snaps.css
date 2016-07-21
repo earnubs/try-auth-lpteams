@@ -1,6 +1,12 @@
 .snap {
   margin:1rem 0;
   padding:1rem 0;
+  display: block;
+}
+
+.snap:link {
+  text-decoration:none;
+  color:#333;
 }
 
 .key {
@@ -12,6 +18,12 @@
 }
 
 .value {
+}
+
+.value i {
+  color: #aabbbb;
+  font-style:normal;
+  text-transform: lowercase;
 }
 
 .row {

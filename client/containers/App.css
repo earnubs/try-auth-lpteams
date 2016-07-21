@@ -1,3 +1,15 @@
 .app {
   text-transform: uppercase;
 }
+
+.loading {
+  font-size:28px;
+  color: #aabbbb;
+  text-align:center;
+  padding:1em;
+  animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0.0; }
+}

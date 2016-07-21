@@ -1,13 +1,12 @@
 import React, { PropTypes, Component } from 'react';
-import style from './Form.css';
+import style from './Query.css';
 
-export default class Form extends Component {
+export default class Query extends Component {
   render() {
-    const { value, onChange, options } = this.props;
+    const { value, onChange } = this.props;
 
     return (
       <div className={style.root}>
-      <div className={style.prompt}>$</div>
       <input
       className={style.search}
       type='text'
@@ -19,7 +18,7 @@ export default class Form extends Component {
   }
 };
 
-Form.propTypes = {
+Query.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired
 }
