@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import {
   selectArch,
   selectQuery,
@@ -13,6 +14,7 @@ import style from './App.css';
 class App extends Component {
   constructor(props) {
     super(props);
+    this.handleClick = this.handleClick.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleArchChange = this.handleArchChange.bind(this)
   }
@@ -30,6 +32,10 @@ class App extends Component {
       const { dispatch, selectedQuery, selectedArch } = nextProps
       dispatch(fetchSnapsIfNeeded(selectedQuery, selectedArch))
     }
+  }
+
+  handleClick(nextId) {
+    //browserHistory.push(`/snap/${nextId}`);
   }
 
   handleChange(nextQuery) {
@@ -55,7 +61,8 @@ class App extends Component {
       <Query value={selectedQuery}
       onChange={this.handleChange}
         />
-      <Snaps snaps={snaps} />
+      {this.props.children}
+      <Snaps snaps={snaps} onClick={this.handleClick}/>
       </div>
     )
   }

@@ -1,4 +1,5 @@
-import { combineReducers } from 'redux'
+import { routerReducer as routing } from 'react-router-redux'
+import { combineReducers } from 'redux';
 import {
   REQUEST_SNAPS,
   RECEIVE_SNAPS,
@@ -76,7 +77,8 @@ function snapsFromQuery(state = {
 const rootReducer = combineReducers({
   snapsFromQuery,
   selectedQuery,
-  selectedArch
+  selectedArch,
+  routing
 })
 
 export default rootReducer

@@ -1,15 +1,15 @@
-import 'babel-polyfill';
+import 'babel-polyfill'
 import React from 'react'
 import { render } from 'react-dom'
-import { Provider } from 'react-redux'
-import App from './containers/App'
+import { browserHistory } from 'react-router'
+import { syncHistoryWithStore } from 'react-router-redux'
+import Root from './containers/Root'
 import configureStore from './store/configureStore'
 
 const store = configureStore()
+const history = syncHistoryWithStore(browserHistory, store)
 
 render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+  <Root store={store} history={history} />,
   document.getElementById('root')
 )
