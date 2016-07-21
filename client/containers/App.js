@@ -7,7 +7,7 @@ import {
   invalidateQuery } from '../actions';
 import Snaps from '../components/Snaps';
 import Query from '../components/Query';
-import Arch from '../components/Arch';
+import ArchPicker from '../components/Arch';
 import style from './App.css';
 
 class App extends Component {
@@ -47,21 +47,15 @@ class App extends Component {
     // FIXME don't replace the entire list with loading/empty message, overlay it
     return (
       <div className={style.app}>
-      <Arch
+      <ArchPicker
       value={selectedArch}
       onChange={this.handleArchChange}
       options={['all', 'armhf', 'i386', 'amd64']}
-      />
+        />
       <Query value={selectedQuery}
       onChange={this.handleChange}
-      />
-      {isEmpty
-          ? (isFetching ? <div className={style.loading}>Loading...</div> :
-             <div className={style.empty}>Empty.</div>)
-          : <div style={{ opacity: isFetching ? 0.5 : 1 }}>
-        <Snaps snaps={snaps} />
-        </div>
-      }
+        />
+      <Snaps snaps={snaps} />
       </div>
     )
   }
