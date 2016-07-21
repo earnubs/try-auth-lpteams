@@ -62,7 +62,6 @@ export function receiveSnaps(query, json) {
 };
 
 function fetchSnaps(query, arch) {
-  console.log('fetching...')
   return dispatch => {
     dispatch(requestSnaps(query))
     return fetch(`/api/search/16/stable/${query}/${arch}`)
@@ -71,21 +70,23 @@ function fetchSnaps(query, arch) {
   }
 };
 
-function shouldFetchSnaps(state, query) {
-  const snaps = state.snapsByQuery[query];
+function shouldFetchSnaps(query, state) {
+  const snaps = state.snapsFromQuery;
 
-  if (!snaps) {
-    return true
+  if (query.length === 0) {
+    return false;
   }
+
   if (snaps.isFetching) {
     return false
   }
-  return snaps.didInvalidate
+
+  return true;
 };
 
 export function fetchSnapsIfNeeded(query, arch) {
   return (dispatch, getState) => {
-    if (shouldFetchSnaps(getState(), query)) {
+    if (shouldFetchSnaps(query, getState())) {
       return dispatch(fetchSnaps(query, arch))
     }
   }

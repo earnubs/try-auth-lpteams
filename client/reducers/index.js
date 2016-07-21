@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux'
 import {
-  INVALIDATE_QUERY,
   REQUEST_SNAPS,
   RECEIVE_SNAPS,
   SELECT_ARCH,
@@ -41,7 +40,7 @@ function selectedChannel(state=DEFAULT_CHANNEL, action) {
   }
 }
 
-function selectedQuery(state='?', action) {
+function selectedQuery(state='', action) {
   switch (action.type) {
     case SELECT_QUERY:
       return action.query
@@ -50,27 +49,21 @@ function selectedQuery(state='?', action) {
   }
 }
 
-function snaps(state = {
+function snapsFromQuery(state = {
   isFetching: false,
-  didInvalidate: false,
   items: []
 }, action) {
   switch (action.type) {
-    case INVALIDATE_QUERY: // refresh
-      return { ...state, didInvalidate: true }; // TIL object spread syntax
-
     case REQUEST_SNAPS:
       return {
         ...state,
         isFetching: true,
-        didInvalidate: false
       };
 
     case RECEIVE_SNAPS:
       return {
         ...state,
         isFetching: false,
-        didInvalidate: false,
         items: action.snaps,
         lastUpdated: action.receivedAt
       };
@@ -80,20 +73,8 @@ function snaps(state = {
   }
 }
 
-function snapsByQuery(state = {}, action) {
-  switch (action.type) {
-    case INVALIDATE_QUERY:
-    case RECEIVE_SNAPS:
-    case REQUEST_SNAPS:
-      return {...state, [action.query]: snaps(state[action.query], action)
-    }
-    default:
-      return state;
-  }
-}
-
 const rootReducer = combineReducers({
-  snapsByQuery,
+  snapsFromQuery,
   selectedQuery,
   selectedArch
 })

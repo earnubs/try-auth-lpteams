@@ -23,7 +23,6 @@ class App extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps, 'xs');
     if (
       (nextProps.selectedQuery !== this.props.selectedQuery) ||
       (nextProps.selectedArch !== this.props.selectedArch)
@@ -77,12 +76,12 @@ App.propTypes = {
 }
 
 function mapStateToProps(state) {
-  const { selectedArch, selectedQuery, snapsByQuery} = state;
+  const { selectedArch, selectedQuery, snapsFromQuery} = state;
   const {
     isFetching,
     lastUpdated,
     items: snaps
-  } = snapsByQuery[selectedQuery] || {
+  } = snapsFromQuery || {
     isFetching: true,
     items: []
   }
