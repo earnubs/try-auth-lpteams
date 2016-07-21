@@ -1,6 +1,6 @@
 .root {
   position: relative;
-  margin: 0 0 10px 0;
+  margin: 0 0 4px 0;
 }
 
 .root:last-child  {
@@ -19,7 +19,7 @@
 }
 
 .root .label {
-  padding: 5px 5px 5px 3em; /** 5px padding to increase hit area **/
+  padding: 5px 5px 5px 2em; /** 5px padding to increase hit area **/
   margin: 0 0 0 1ex;
   height: 1.4em; /** line-height, see also __switch __label::before,after **/
   user-select: none;
@@ -34,9 +34,9 @@
   top: 0;
   left: 0;
   bottom: 0;
-  height: 1.4em; /** line-height, see also __switch __label **/
-  margin: 5px 5px 5px 0;
-  border-radius:4px;
+  height: 1em; /** line-height, see also __switch __label **/
+  margin: 2px 2px 2px 0;
+  border-radius:1px;
   transition:all 100ms;
   border-radius:2px;
 }
@@ -44,25 +44,24 @@
 .root .label::before {
   content: '';
   padding: 0 0 0 5px;
-  width:3em;
+  width:2em;
   z-index:2;
   color:white;
   text-transform: uppercase;
-  background-color: #999;
-  box-shadow: inset 0 1px 1px 0px rgba(0,0,0,0.3);
+  background-color: #e6ecec;
 }
 
 .root .label::after {
-  width: 1.5em;
-  border:1px solid #999;
+  width: 1em;
   background-color: white;
   z-index: 3;
-  height: calc(1.4em + 2px);
-  top:-1px;
+  height: 1em;
+  top:0;
+  border:1px solid #e6ecec;
 }
 
 .root input:checked + .label::after {
-  left:1.5em;
+  left:1em;
   border-color:#38b44a;
 }
 
@@ -72,9 +71,7 @@
 }
 
 .root input:focus + .label::after {
-  border-color: #666;
 }
 
 .root input:focus:checked + .label::after {
-  border-color: #206d2c;
 }
