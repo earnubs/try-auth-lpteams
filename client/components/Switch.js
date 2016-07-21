@@ -6,10 +6,9 @@ export default class Switch extends Component {
     const { value, onChange, name, checked } = this.props;
 
     return (
-      <div className={style.switch}>
+      <div className={style.root}>
       <input
       name={name}
-      className={style.input}
       type="radio"
       value={value}
       checked={checked}

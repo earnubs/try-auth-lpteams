@@ -1,9 +1,80 @@
 .root {
+  position: relative;
+  margin: 0 0 10px 0;
 }
 
-.label {
+.root:last-child  {
+  margin-bottom: 0;
 }
 
-.input {
+.root, .root * {
+  box-sizing:border-box;
+  cursor: pointer;
 }
 
+.root input {
+  opacity: 0;
+  height: 1px;
+  position: absolute;
+}
+
+.root .label {
+  padding: 5px 5px 5px 3em; /** 5px padding to increase hit area **/
+  margin: 0 0 0 1ex;
+  height: 1.4em; /** line-height, see also __switch __label::before,after **/
+  user-select: none;
+  outline:none;
+}
+
+.root .label::before, .root .label::after {
+  box-sizing:border-box;
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  height: 1.4em; /** line-height, see also __switch __label **/
+  margin: 5px 5px 5px 0;
+  border-radius:4px;
+  transition:all 100ms;
+  border-radius:2px;
+}
+
+.root .label::before {
+  content: '';
+  padding: 0 0 0 5px;
+  width:3em;
+  z-index:2;
+  color:white;
+  text-transform: uppercase;
+  background-color: #999;
+  box-shadow: inset 0 1px 1px 0px rgba(0,0,0,0.3);
+}
+
+.root .label::after {
+  width: 1.5em;
+  border:1px solid #999;
+  background-color: white;
+  z-index: 3;
+  height: calc(1.4em + 2px);
+  top:-1px;
+}
+
+.root input:checked + .label::after {
+  left:1.5em;
+  border-color:#38b44a;
+}
+
+.root input:checked + .label::before {
+  background-color:#38b44a;
+  border-color:#38b44a;
+}
+
+.root input:focus + .label::after {
+  border-color: #666;
+}
+
+.root input:focus:checked + .label::after {
+  border-color: #206d2c;
+}
