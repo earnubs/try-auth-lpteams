@@ -11,6 +11,7 @@ export default class Query extends Component {
       className={style.search}
       type='text'
       autoFocus
+      placeholder={'Query'}
       onChange={e => onChange(e.target.value)}
       value={value} />
       </div>
