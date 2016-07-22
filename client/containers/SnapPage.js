@@ -22,9 +22,10 @@ class SnapPage extends Component {
   }
 
   render() {
-    const { snap, isFetching } = this.props;
+    const { snap } = this.props;
 
-    return <Snap snap={snap} />
+    return (snap ? <Snap snap={snap} /> : <div>Accessing…</div>)
+
   }
 };
 
