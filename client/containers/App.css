@@ -1,4 +1,4 @@
-.app {
+.root {
   text-transform: uppercase;
 }
 
@@ -8,6 +8,15 @@
   text-align:center;
   padding:1em;
   animation: blink 1s linear infinite;
+}
+
+.control {
+}
+
+.results {
+}
+
+.result {
 }
 
 @keyframes blink {

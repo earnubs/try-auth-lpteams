@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import classNames from 'classNames';
 import {
   selectArch,
   selectQuery,
@@ -10,6 +11,7 @@ import Snaps from '../components/Snaps';
 import Query from '../components/Query';
 import ArchPicker from '../components/Arch';
 import style from './App.css';
+import grid from '../styles/grid.css';
 
 class App extends Component {
   constructor(props) {
@@ -50,9 +52,20 @@ class App extends Component {
     const { selectedArch, selectedQuery, snaps, isFetching, lastUpdated } = this.props;
     const isEmpty = (snaps.length === 0);
 
-    // FIXME don't replace the entire list with loading/empty message, overlay it
+
+    let resultsStyle = classNames({
+      [style.results]: true,
+      [grid.u_2_5]: true
+    });
+
+    let detailStyle = classNames({
+      [style.detail]: true,
+      [grid.u_3_5]: true
+    });
+
     return (
-      <div className={style.app}>
+      <div className={style.root}>
+      <div className={style.control}>
       <ArchPicker
       value={selectedArch}
       onChange={this.handleArchChange}
@@ -61,8 +74,15 @@ class App extends Component {
       <Query value={selectedQuery}
       onChange={this.handleChange}
         />
-      {this.props.children}
+      </div>
+      <div className={grid.root}>
+      <div className={resultsStyle}>
       <Snaps snaps={snaps} onClick={this.handleClick}/>
+      </div>
+      <div className={style.detail}>
+      {this.props.children}
+      </div>
+      </div>
       </div>
     )
   }
