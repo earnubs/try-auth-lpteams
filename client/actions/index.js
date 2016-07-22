@@ -122,13 +122,16 @@ function fetchSnap(id) {
 function shouldFetchSnap(id, state) {
   const snap = state.snapById[id];
 
-  // TODO
-  return true;
+  if (!snap) {
+    return true;
+  }
+
+  return false;
 }
 
 export function fetchSnapIfNeeded(id) {
   return (dispatch, getState) => {
-    if (shouldFetchSnap) {
+    if (shouldFetchSnap(id, getState())) {
       return dispatch(fetchSnap(id));
     }
   }

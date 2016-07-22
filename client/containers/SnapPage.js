@@ -17,29 +17,26 @@ class SnapPage extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.params.id !== this.props.params.id) {
-      const { dispatch, params } = this.props;
-      dispatch(fetchSnapIfNeeded(params.id));
+      this.props.dispatch(fetchSnapIfNeeded(nextProps.params.id));
     }
   }
 
   render() {
     const { snap, isFetching } = this.props;
 
-    return <Snap snap={snap} className={isFetching ? 'loading' : 'ready'}/>
+    return <Snap snap={snap} />
   }
 };
 
 function mapStateToProps(state, ownProps) {
-  const { selectedSnap, snapById } = state;
+  const { snapById } = state;
 
   const {
     isFetching,
     lastUpdated,
     snap
   } = snapById[ownProps.params.id] || {
-    isFetching: true,
-    lastUpdated: null,
-    snap: {}
+    isFetching: true
   }
 
   return {

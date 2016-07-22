@@ -3,22 +3,29 @@
   <head>
     <title>Snaps</title>
     <style>
-      :root {
+      html, body {
         background-color:#f8ffff;
         color:#333;
         font:normal normal 14px/1.3 'Blender Pro', 'Arial', 'Helvetica', sans-serif;
-        letter-spacing:1px;
+        letter-spacing:0.4px;
         padding: 0;
         margin: 0;
+        box-sizing: border-box;
+        height:100%;
       }
 
-      body {
-        margin:0;
-        padding:0;
+      * {
+        box-sizing: border-box;
+      }
+
+      .foo {
+        height:100%;
+        width:100%;
       }
     </style>
   </head>
   <body>
+    <!--
     {% if not user %}
     <p>
     <a href="/">Home</a> |
@@ -32,7 +39,8 @@
     </p>
     {% endif %}
     {% block content %}{% endblock %}
-    <div id="root"></div>
+    -->
+    <div id="root" class="foo"></div>
     <script src="/static/bundle.js"></script>
   </body>
 </html>

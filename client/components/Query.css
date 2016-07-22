@@ -10,13 +10,16 @@
   padding:15px;
   margin:0;
   line-height:40px;
-  border:1px solid rgba(64,64,64,0.1);
+  border-top:1px solid rgba(64,64,64,0.1);
+  border-bottom:1px solid rgba(64,64,64,0.1);
+  border-left:none;
+  border-right:none;
   position:absolute;
   top:0;
   left:0;
   right:0;
   z-index:2;
-  background-color:transparent;
+  background-color:white;
   font-size:28px;
   font-family: 'Blender Pro', sans-serif;
   text-transform:uppercase;
