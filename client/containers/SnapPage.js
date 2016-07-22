@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {
   selectSnapId,
   fetchSnapIfNeeded } from '../actions';
+import Snap from '../components/Snap.js';
 
 class SnapPage extends Component {
   constructor(props) {
@@ -22,9 +23,9 @@ class SnapPage extends Component {
   }
 
   render() {
-    const { snap } = this.props;
-    console.log(this.props);
-    return <div>{snap ? snap.name : 'no'}</div>
+    const { snap, isFetching } = this.props;
+
+    return <Snap snap={snap} className={isFetching ? 'loading' : 'ready'}/>
   }
 };
 
