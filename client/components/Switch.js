@@ -7,14 +7,14 @@ export default class Switch extends Component {
 
     return (
       <div className={style.root}>
-      <input
-      name={name}
-      type="radio"
-      value={value}
-      checked={checked}
-      onChange={e => onChange(e.target.value)}
-      id={'id_' + value} />
-      <label className={style.label} htmlFor={'id_' + value}>{value}</label>
+        <input
+          name={name}
+          type="radio"
+          value={value}
+          checked={checked}
+          onChange={e => onChange(e.target.value)}
+          id={'id_' + value} />
+        <label className={style.label} htmlFor={'id_' + value}>{value}</label>
       </div>
     )}
 };

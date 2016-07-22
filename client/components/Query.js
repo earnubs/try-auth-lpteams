@@ -7,13 +7,13 @@ export default class Query extends Component {
 
     return (
       <div className={style.root}>
-      <input
-      className={style.search}
-      type='text'
-      autoFocus
-      placeholder={'Query'}
-      onChange={e => onChange(e.target.value)}
-      value={value} />
+        <input
+          className={style.search}
+          type='text'
+          autoFocus
+          placeholder={'Query'}
+          onChange={e => onChange(e.target.value)}
+          value={value} />
       </div>
     )
   }

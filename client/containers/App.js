@@ -29,7 +29,7 @@ class App extends Component {
   componentWillReceiveProps(nextProps) {
     if (
       (nextProps.selectedQuery !== this.props.selectedQuery) ||
-      (nextProps.selectedArch !== this.props.selectedArch)
+        (nextProps.selectedArch !== this.props.selectedArch)
     ) {
       const { dispatch, selectedQuery, selectedArch } = nextProps
       dispatch(fetchSnapsIfNeeded(selectedQuery, selectedArch))
@@ -52,6 +52,10 @@ class App extends Component {
     const { selectedArch, selectedQuery, snaps, isFetching, lastUpdated } = this.props;
     const isEmpty = (snaps.length === 0);
 
+    let rootStyle = classNames({
+      [style.root]: true,
+      [grid.root]: true
+    });
 
     let resultsStyle = classNames({
       [style.results]: true,
@@ -64,25 +68,26 @@ class App extends Component {
     });
 
     return (
-      <div className={style.root}>
-      <div className={style.control}>
-      <ArchPicker
-      value={selectedArch}
-      onChange={this.handleArchChange}
-      options={['all', 'armhf', 'i386', 'amd64']}
-        />
-      <Query value={selectedQuery}
-      onChange={this.handleChange}
-        />
-      </div>
-      <div className={grid.root}>
-      <div className={resultsStyle}>
-      <Snaps snaps={snaps} onClick={this.handleClick}/>
-      </div>
-      <div className={style.detail}>
-      {this.props.children}
-      </div>
-      </div>
+      <div className={rootStyle}>
+        <div className={resultsStyle}>
+          <Query value={selectedQuery} onChange={this.handleChange} />
+          <div className={grid.root}>
+            <div className={grid.u_1_3}>
+              <ArchPicker
+                value={selectedArch}
+                onChange={this.handleArchChange}
+                options={['all', 'armhf', 'i386', 'amd64']} />
+            </div>
+            <div className={grid.u_1_3}>
+            </div>
+            <div className={grid.u_1_3}>
+            </div>
+          </div>
+          <Snaps snaps={snaps} onClick={this.handleClick}/>
+        </div>
+        <div className={style.detail}>
+          {this.props.children}
+        </div>
       </div>
     )
   }

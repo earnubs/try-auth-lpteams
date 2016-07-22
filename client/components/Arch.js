@@ -8,16 +8,16 @@ export default class Arch extends Component {
 
     return (
       <div className={style.arch}>
-      <label>Architecture</label>
-      {options.map((option, i) =>
-        <Switch
-          key={i}
-          value={option}
-          name={'arch'}
-          checked={(value === option)}
-          onChange={onChange} />
-      )}
-      </div>
+        <label>Architecture</label>
+        {options.map((option, i) =>
+          <Switch
+            key={i}
+            value={option}
+            name={'arch'}
+            checked={(value === option)}
+            onChange={onChange} />
+          )}
+        </div>
     )
   };
 };

@@ -25,8 +25,8 @@ app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output
 app.use(webpackHotMiddleware(compiler))
 
 nunjucks.configure('views', {
-    autoescape: true,
-    express: app
+  autoescape: true,
+  express: app
 });
 
 app.set('view engine', 'njk');
