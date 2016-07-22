@@ -4,7 +4,7 @@ import style from './Snaps.css';
 
 export default class Snaps extends Component {
   render() {
-    const { snaps, onClick } = this.props;
+    const { snaps } = this.props;
     return (
       <div className={style.row}>
         {snaps.map((snap, i) =>
@@ -33,6 +33,5 @@ export default class Snaps extends Component {
 }
 
 Snaps.propTypes = {
-  snaps: PropTypes.array.isRequired,
-  onClick: PropTypes.func.isRequired
+  snaps: PropTypes.array.isRequired
 }

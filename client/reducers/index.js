@@ -1,8 +1,10 @@
 import { routerReducer as routing } from 'react-router-redux'
 import { combineReducers } from 'redux';
 import {
-  REQUEST_SNAPS,
-  RECEIVE_SNAPS,
+  REQUEST_QUERY_SNAPS,
+  RECEIVE_QUERY_SNAPS,
+  REQUEST_SNAP,
+  RECEIVE_SNAP,
   SELECT_ARCH,
   SELECT_CHANNEL,
   SELECT_SERIES,
@@ -50,25 +52,63 @@ function selectedQuery(state='', action) {
   }
 }
 
+function selectedSnapId(state, action) {
+  switch (action.type) {
+    case SELECT_SNAP_ID:
+      return action.id
+    default:
+      return state
+  }
+}
+
 function snapsFromQuery(state = {
   isFetching: false,
   items: []
 }, action) {
   switch (action.type) {
-    case REQUEST_SNAPS:
+    case REQUEST_QUERY_SNAPS:
       return {
         ...state,
         isFetching: true,
       };
 
-    case RECEIVE_SNAPS:
+    case RECEIVE_QUERY_SNAPS:
       return {
         ...state,
         isFetching: false,
         items: action.snaps,
         lastUpdated: action.receivedAt
       };
+    default:
+      return state;
+  }
+}
 
+function snap(state = {
+}, action) {
+  switch (action.type) {
+    case REQUEST_SNAP:
+      return {
+        ...state,
+        isFetching: true
+      }
+    case RECEIVE_SNAP:
+      return {
+        ...state,
+        isFetching: false,
+        snap: action.snap,
+        lastUpdated: action.receivedAt
+      }
+    default:
+      return state;
+  }
+};
+
+function snapById(state = {}, action) {
+  switch (action.type) {
+    case REQUEST_SNAP:
+    case RECEIVE_SNAP:
+      return {...state, [action.id]: snap(state[action.id], action)}
     default:
       return state;
   }
@@ -76,6 +116,7 @@ function snapsFromQuery(state = {
 
 const rootReducer = combineReducers({
   snapsFromQuery,
+  snapById,
   selectedQuery,
   selectedArch,
   routing

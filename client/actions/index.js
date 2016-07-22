@@ -2,8 +2,10 @@ import fetch from 'isomorphic-fetch';
 
 import {
   INVALIDATE_QUERY,
-  REQUEST_SNAPS,
-  RECEIVE_SNAPS,
+  REQUEST_QUERY_SNAPS,
+  RECEIVE_QUERY_SNAPS,
+  REQUEST_SNAP,
+  RECEIVE_SNAP,
   SELECT_ARCH,
   SELECT_CHANNEL,
   SELECT_SERIES,
@@ -15,62 +17,78 @@ export function selectSeries(series) {
     type: SELECT_SERIES,
     series
   }
-};
+}
 
 export function selectArch(arch) {
   return {
     type: SELECT_ARCH,
     arch
   }
-};
+}
 
 export function selectChannel(channel) {
   return {
     type: SELECT_CHANNEL,
     channel
   }
-};
+}
 
 export function selectQuery(query) {
   return {
     type: SELECT_QUERY,
     query
   }
-};
+}
 
-export function invalidateQuery(query) {
+export function selectSnapId(id) {
   return {
-    type: INVALIDATE_QUERY,
+    type: SELECT_SNAP_ID,
+    id
+  }
+}
+
+export function requestQuerySnaps(query) {
+  return {
+    type: REQUEST_QUERY_SNAPS,
     query
   }
-};
+}
 
-export function requestSnaps(query) {
+export function receiveQuerySnaps(query, json) {
   return {
-    type: REQUEST_SNAPS,
-    query
-  }
-};
-
-export function receiveSnaps(query, json) {
-  return {
-    type: RECEIVE_SNAPS,
+    type: RECEIVE_QUERY_SNAPS,
     query,
     snaps: json,
     receivedAt: Date.now()
   }
-};
+}
 
-function fetchSnaps(query, arch) {
+export function requestSnap(id) {
+  return {
+    type: REQUEST_SNAP,
+    id
+  }
+}
+
+export function receiveSnap(id, json) {
+  return {
+    type: RECEIVE_SNAP,
+    id,
+    snap: json,
+    receivedAt: Date.now()
+  }
+}
+
+function fetchQuerySnaps(query, arch) {
   return dispatch => {
-    dispatch(requestSnaps(query))
+    dispatch(requestQuerySnaps(query))
     return fetch(`/api/search/16/stable/${query}/${arch}`)
       .then(response => response.json())
-      .then(json => dispatch(receiveSnaps(query, json)))
+      .then(json => dispatch(receiveQuerySnaps(query, json)))
   }
-};
+}
 
-function shouldFetchSnaps(query, state) {
+function shouldFetchQuerySnaps(query, state) {
   const snaps = state.snapsFromQuery;
 
   if (query.length === 0) {
@@ -82,13 +100,36 @@ function shouldFetchSnaps(query, state) {
   }
 
   return true;
-};
+}
 
-export function fetchSnapsIfNeeded(query, arch) {
+export function fetchQuerySnapsIfNeeded(query, arch) {
   return (dispatch, getState) => {
-    if (shouldFetchSnaps(query, getState())) {
-      return dispatch(fetchSnaps(query, arch))
+    if (shouldFetchQuerySnaps(query, getState())) {
+      return dispatch(fetchQuerySnaps(query, arch))
     }
   }
-};
+}
 
+function fetchSnap(id) {
+  return dispatch => {
+    dispatch(requestSnap(id))
+    return fetch(`/api/snap/${id}`)
+    .then(response => response.json())
+    .then(json => dispatch(receiveSnap(id, json)))
+  }
+}
+
+function shouldFetchSnap(id, state) {
+  const snap = state.snapById[id];
+
+  // TODO
+  return true;
+}
+
+export function fetchSnapIfNeeded(id) {
+  return (dispatch, getState) => {
+    if (shouldFetchSnap) {
+      return dispatch(fetchSnap(id));
+    }
+  }
+}

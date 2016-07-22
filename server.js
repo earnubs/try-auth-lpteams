@@ -71,6 +71,16 @@ router.get('/api/search/:series/:channel/:name?/:arch?', (req, res, next) => {
   res.send(req.body);
 });
 
+router.get('/api/snap/:id', (req, res, next) => {
+  cpi.snap(req.params.id, function(result) {
+    req.body = result;
+    next();
+  });
+
+}, function(req, res) {
+  res.send(req.body);
+});
+
 app.use('/', router);
 app.use('/login', authRouter);
 
