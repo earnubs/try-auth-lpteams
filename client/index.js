@@ -6,8 +6,10 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import Root from './containers/Root';
 import configureStore from './store/configureStore';
 
-const store = configureStore()
-const history = syncHistoryWithStore(browserHistory, store)
+const initialState = window.__INITIAL_STATE__;
+
+const store = configureStore(initialState);
+const history = syncHistoryWithStore(browserHistory, store);
 
 render(
   <Root store={store} history={history} />,

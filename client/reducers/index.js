@@ -84,8 +84,7 @@ function snapsFromQuery(state = {
   }
 }
 
-function snap(state = {
-}, action) {
+function snap(state = {}, action) {
   switch (action.type) {
     case REQUEST_SNAP:
       return {

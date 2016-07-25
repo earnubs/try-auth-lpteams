@@ -1,28 +1,29 @@
 "use strict";
-const express = require('express');
-const methodOverride = require('method-override');
-const morgan = require('morgan');
-const nunjucks = require('nunjucks');
-const request = require('superagent');
-const router = express.Router();
-const session = require('express-session');
-const RedisStore = require('connect-redis')(session);
-const util = require('util');
+import RedisConnect from 'connect-redis';
+import express, { Router } from 'express';
+import methodOverride from 'method-override';
+import morgan from 'morgan';
+import nunjucks from 'nunjucks';
+import request from 'superagent';
+import session from 'express-session';
+import util from 'util';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
 
-const webpack = require('webpack')
-const webpackDevMiddleware = require('webpack-dev-middleware')
-const webpackHotMiddleware = require('webpack-hot-middleware')
-const config = require('./webpack.config')
+import authRouter from '../auth.js';
+import config from '../webpack.config';
+import cpi from '../lib/cpi';
 
-const authRouter = require('./auth.js');
-const cpi = require('./lib/cpi');
+const router = Router();
 
-let app = express();
-app.use(express.static('public'));
-
+const RedisStore = RedisConnect(session);
+const app = express();
 const compiler = webpack(config)
+
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
 app.use(webpackHotMiddleware(compiler))
+app.use(express.static('public'));
 
 nunjucks.configure('views', {
   autoescape: true,
