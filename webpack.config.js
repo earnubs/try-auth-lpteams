@@ -20,14 +20,17 @@ module.exports = {
       {
         test: /\.js$/,
         loaders: ['babel'],
+        include: __dirname,
         exclude: /node_modules/,
-        include: path.join(__dirname, 'client')
+        query: {
+          presets: [ 'react-hmre' ]
+        }
       },
       {
         test: /\.css$/,
         loader: 'style!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
-        exclude: /node_modules/,
-        include: path.join(__dirname, 'client')
+        include: __dirname,
+        exclude: /node_modules/
       }
     ]
   }

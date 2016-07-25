@@ -11,6 +11,10 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
+import { renderToString } from 'react-dom/server';
+import { match, RouterContext } from 'react-router';
+import routes from '../client/routes'
+
 import authRouter from '../auth.js';
 import config from '../webpack.config';
 import cpi from '../lib/cpi';
@@ -44,12 +48,32 @@ app.use(session({
 }));
 
 app.use((req, res, next) => {
-  if (!req.session) {
-    return next(new Error('oh no')); // handle error
-  }
-  next(); // otherwise continue
+  // Note that req.url here should be the full URL path from
+  // the original request, including the query string.
+  match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
+    if (error) {
+      res.status(500).send(error.message)
+    } else if (redirectLocation) {
+      res.redirect(302, redirectLocation.pathname + redirectLocation.search)
+    } else if (renderProps) {
+      // You can also check renderProps.components or renderProps.routes for
+      // your "not found" component or route respectively, and send a 404 as
+      // below, if you're using a catch-all route.
+      res.status(200).send(renderToString(<RouterContext {...renderProps} />))
+    } else {
+      res.status(404).send('Not found')
+    }
+  })
 });
 
+app.use((req, res, next) => {
+  if (!req.session) {
+    return next(new Error('no session, boo!'));
+  }
+  next();
+});
+
+/**
 router.get('/', (req, res) => {
   let name;
   if (req.session) {
@@ -57,6 +81,7 @@ router.get('/', (req, res) => {
   }
   res.render('index', { user: name });
 });
+**/
 
 router.get('/api/search/:series/:channel/:name?/:arch?', (req, res, next) => {
   cpi.search(req.params.name, function(result) {
@@ -82,8 +107,9 @@ router.get('/api/snap/:id', (req, res, next) => {
   res.send(req.body);
 });
 
-app.use('/', router);
+//app.use('/', router);
 app.use('/login', authRouter);
+
 
 const server = app.listen(3000, () => {
   const host = server.address().address;
