@@ -13,8 +13,11 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 
 import React from 'react';
 import { renderToString } from 'react-dom/server';
-import { match, RouterContext } from 'react-router';
-import routes from '../client/routes';
+import { Provider } from 'react-redux';
+
+import { fetchSnapIfNeeded } from '../client/actions';
+import configureStore from '../client/store/configureStore';
+import App from '../client/containers/App';
 
 import authRouter from '../auth.js';
 import config from '../webpack.config';
@@ -51,43 +54,6 @@ app.use(session({
   saveUninitialized: false
 }));
 
-app.use((req, res, next) => {
-
-  // Note that req.url here should be the full URL path from
-  // the original request, including the query string.
-  match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
-    if (error) {
-      res.status(500).send(error.message)
-    } else if (redirectLocation) {
-      res.redirect(302, redirectLocation.pathname + redirectLocation.search)
-    } else if (renderProps) {
-      // You can also check renderProps.components or renderProps.routes for
-      // your "not found" component or route respectively, and send a 404 as
-      // below, if you're using a catch-all route.
-      res.status(200).send(renderToString(<RouterContext {...renderProps} />))
-    } else {
-      res.status(404).send('Not found')
-    }
-  })
-});
-
-app.use((req, res, next) => {
-  if (!req.session) {
-    return next(new Error('no session, boo!'));
-  }
-  next();
-});
-
-/**
-router.get('/', (req, res) => {
-  let name;
-  if (req.session) {
-    name = req.session.name;
-  }
-  res.render('index', { user: name });
-});
- **/
-
 router.get('/api/search/:series/:channel/:name?/:arch?', (req, res, next) => {
   cpi.search(req.params.name, function(result) {
     req.body = result;
@@ -112,9 +78,81 @@ router.get('/api/snap/:id', (req, res, next) => {
   res.send(req.body);
 });
 
-//app.use('/', router);
-app.use('/login', authRouter);
+router.get('/snap/:id?', (req, res, next) => {
+  cpi.snap(req.params.id, function(result) {
+    req.body = result;
+    next();
+  });
+}, (req, res) => {
 
+  const initialState = {
+    snapById: {
+      [req.params.id]: {
+        isFetching: false,
+        snap: req.body,
+        lastUpdated: Date.now()
+      }
+    }
+  };
+  const store = configureStore(initialState);
+  const html = renderToString(
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+  const finalState = store.getState();
+
+  req.renderedHtml = html;
+  req.finalState = finalState;
+
+  res.render('index', { html: req.renderedHtml, state: req.finalState });
+
+});
+
+app.use('/', (req, res, next) => {
+  const store = configureStore();
+  const html = renderToString(
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+
+  const finalState = store.getState();
+
+  req.renderedHtml = html;
+  req.finalState = finalState;
+
+  next();
+});
+
+app.use((req, res, next) => {
+  if (!req.session) {
+    return next(new Error('no session, boo!'));
+  }
+  next();
+});
+
+router.get('/', (req, res) => {
+  let name;
+  if (req.session) {
+    name = req.session.name;
+  }
+  const store = configureStore();
+  const html = renderToString(
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+  const finalState = store.getState();
+
+  req.renderedHtml = html;
+  req.finalState = finalState;
+  res.render('index', { user: name, html: req.renderedHtml, state: req.finalState });
+});
+
+
+app.use('/', router);
+app.use('/login', authRouter);
 
 const server = app.listen(3000, () => {
   const host = server.address().address;

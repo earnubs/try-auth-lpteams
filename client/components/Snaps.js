@@ -7,7 +7,7 @@ export default class Snaps extends Component {
     return (
       <div>
           {snaps.map((snap, i) =>
-            <Link to={`${snap.snap_id}`} key={i} className={'b-snap'}>
+            <Link to={`/snap/${snap.snap_id}`} key={i} className={'b-snap'}>
               <div className={'b-snap__item b-snap__item_hilite'}>
                 <span className={'b-snap__item_key'}>#{snap.revision}</span>
                 <span className={'b-snap__item_value'}>{snap.title} <i>{'v'+snap.version}</i></span>

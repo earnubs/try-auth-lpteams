@@ -41,7 +41,10 @@
     {% endif %}
     {% block content %}{% endblock %}
     -->
-    <div id="root" class="foo"></div>
+    <div id="root" class="foo">{{html|safe}}</div>
+    <script>
+      __INITIAL_STATE__ = {{state|dump|safe}};
+    </script>
     <script src="/static/bundle.js"></script>
   </body>
 </html>
