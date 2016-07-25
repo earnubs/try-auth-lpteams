@@ -11,9 +11,10 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
+import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { match, RouterContext } from 'react-router';
-import routes from '../client/routes'
+import routes from '../client/routes';
 
 import authRouter from '../auth.js';
 import config from '../webpack.config';
@@ -25,7 +26,10 @@ const RedisStore = RedisConnect(session);
 const app = express();
 const compiler = webpack(config)
 
-app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
+app.use(webpackDevMiddleware(compiler, {
+  hot: true,
+  noInfo: true,
+  publicPath: config.output.publicPath }))
 app.use(webpackHotMiddleware(compiler))
 app.use(express.static('public'));
 
@@ -48,6 +52,7 @@ app.use(session({
 }));
 
 app.use((req, res, next) => {
+
   // Note that req.url here should be the full URL path from
   // the original request, including the query string.
   match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
@@ -81,7 +86,7 @@ router.get('/', (req, res) => {
   }
   res.render('index', { user: name });
 });
-**/
+ **/
 
 router.get('/api/search/:series/:channel/:name?/:arch?', (req, res, next) => {
   cpi.search(req.params.name, function(result) {

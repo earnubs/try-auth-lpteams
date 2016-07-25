@@ -4,6 +4,7 @@ var webpack = require('webpack');
 module.exports = {
   entry: [
     'webpack-hot-middleware/client',
+    'webpack/hot/only-dev-server',
     './client/index',
   ],
   output: {
@@ -20,18 +21,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loaders: ['babel'],
-        query: {
-          stage: 0,
-          plugins: [],
-          extra: {
-            'react-transform': [{
-              target: 'react-transform-hmr',
-              imports: ['react-native'],
-              locals: ['module']
-            }]
-          }
-        }
+        loaders: ['react-hot', 'babel'],
       }
     ]
   }
