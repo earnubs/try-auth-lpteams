@@ -14,14 +14,17 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { Provider } from 'react-redux';
+import { match, RouterContext } from 'react-router'
 
 import { fetchSnapIfNeeded } from '../client/actions';
 import configureStore from '../client/store/configureStore';
 import App from '../client/containers/App';
+import SnapPage from '../client/containers/SnapPage';
 
 import authRouter from '../auth.js';
 import config from '../webpack.config';
 import cpi from '../lib/cpi';
+import routes from '../client/routes';
 
 const router = Router();
 
@@ -94,18 +97,34 @@ router.get('/snap/:id?', (req, res, next) => {
       }
     }
   };
+
   const store = configureStore(initialState);
-  const html = renderToString(
-    <Provider store={store}>
-      <App />
-    </Provider>
-  );
-  const finalState = store.getState();
 
-  req.renderedHtml = html;
-  req.finalState = finalState;
+  match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
+    console.log(renderProps);
+    if (error){
+      res.status(500).send(error.message)
+    } else if (redirectLocation) {
+      res.redirect(302, redirectLocation.pathname + redirectLocation.search)
+    } else if (renderProps) {
+      // You can also check renderProps.components or renderProps.routes for
+      // your "not found" component or route respectively, and send a 404 as
+      // below, if you're using a catch-all route.
+      const html = renderToString(
+        <Provider store={store}>
+          <RouterContext {...renderProps} />
+        </Provider>
+      )
+      const finalState = store.getState();
 
-  res.render('index', { html: req.renderedHtml, state: req.finalState });
+      req.renderedHtml = html;
+      req.finalState = finalState;
+
+      res.render('index', { html: req.renderedHtml, state: req.finalState });
+    } else {
+      res.status(404).send('Not found')
+    }
+  })
 
 });
 
