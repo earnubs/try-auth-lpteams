@@ -19,18 +19,19 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        loaders: ['babel'],
-        include: __dirname,
         exclude: /node_modules/,
+        loaders: ['babel'],
         query: {
-          presets: [ 'react-hmre' ]
+          stage: 0,
+          plugins: [],
+          extra: {
+            'react-transform': [{
+              target: 'react-transform-hmr',
+              imports: ['react-native'],
+              locals: ['module']
+            }]
+          }
         }
-      },
-      {
-        test: /\.css$/,
-        loader: 'style!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
-        include: __dirname,
-        exclude: /node_modules/
       }
     ]
   }

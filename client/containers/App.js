@@ -9,7 +9,6 @@ import {
 import Snaps from '../components/Snaps';
 import Query from '../components/Query';
 import ArchPicker from '../components/Arch';
-import layoutCSS from '../styles/layout.css';
 
 class App extends Component {
   constructor(props) {
@@ -46,9 +45,9 @@ class App extends Component {
     const isEmpty = (snaps.length === 0);
 
     return (
-      <div className={layoutCSS.book}>
-        <div className={layoutCSS.book__summary}>
-          <div className={layoutCSS.book__toc}>
+      <div className={'b-book'}>
+        <div className={'b-book__summary'}>
+          <div className={'b-book__toc'}>
             <Query value={selectedQuery} onChange={this.handleChange} />
             <ArchPicker
               value={selectedArch}
@@ -57,10 +56,10 @@ class App extends Component {
             <Snaps snaps={snaps} onClick={this.handleClick}/>
           </div>
         </div>
-        <div className={layoutCSS.book__body}>
-          <div className={layoutCSS.book__inner}>
-            <div className={layoutCSS.page}>
-              <div className={layoutCSS.page__inner}>
+        <div className={'b-book__body'}>
+          <div className={'b-book__inner'}>
+            <div className={'b-page'}>
+              <div className={'b-page__inner'}>
                 {this.props.children}
               </div>
             </div>

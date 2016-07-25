@@ -1,18 +1,15 @@
-.root {
-}
-
-.snap {
+.b-snap {
   margin:1rem 0;
   padding:1rem 0;
   display: block;
 }
 
-.snap:link {
+.b-snap:link {
   text-decoration:none;
   color:#333;
 }
 
-.key {
+.b-snap__item_key {
   padding-right:2rem;
   width: 100px;
   display:inline-block;
@@ -20,18 +17,9 @@
   color: #aabbbb;
 }
 
-.value {
+.b-snap__item_value {
 }
 
-.value i {
-  color: #aabbbb;
-  font-style:normal;
-  text-transform: lowercase;
-}
-
-.row {
-}
-
-.hilite {
+.b-snap__item_hilite {
   font-size: 28px;
 }

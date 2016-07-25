@@ -1,12 +1,11 @@
 import React, { PropTypes, Component } from 'react';
-import style from './Switch.css';
 
 export default class Switch extends Component {
   render() {
     const { value, onChange, name, checked } = this.props;
 
     return (
-      <div className={style.root}>
+      <div className={'b-switch'}>
         <input
           name={name}
           type="radio"
@@ -14,7 +13,7 @@ export default class Switch extends Component {
           checked={checked}
           onChange={e => onChange(e.target.value)}
           id={'id_' + value} />
-        <label className={style.label} htmlFor={'id_' + value}>{value}</label>
+        <label htmlFor={'id_' + value}>{value}</label>
       </div>
     )}
 };

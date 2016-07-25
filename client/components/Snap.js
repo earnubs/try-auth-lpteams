@@ -1,5 +1,4 @@
 import React, { PropTypes, Component } from 'react';
-//import style from './Snap.css';
 
 export default class Snap extends Component {
 

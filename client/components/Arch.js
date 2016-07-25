@@ -1,13 +1,12 @@
 import React, { PropTypes, Component } from 'react';
 import Switch from './Switch.js';
-import style from './Arch.css';
 
 export default class Arch extends Component {
   render() {
     const { value, onChange, options } = this.props;
 
     return (
-      <div className={style.arch}>
+      <div className={'b-arch-switch'}>
         <label>Architecture</label>
         {options.map((option, i) =>
           <Switch

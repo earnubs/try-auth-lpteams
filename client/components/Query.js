@@ -1,17 +1,16 @@
 import React, { PropTypes, Component } from 'react';
-import style from './Query.css';
 
 export default class Query extends Component {
   render() {
     const { value, onChange } = this.props;
 
     return (
-      <div className={style.root}>
+      <div className={'b-snap-query'}>
         <input
-          className={style.search}
+          className={'b-snap-query__input'}
           type='text'
           autoFocus
-          placeholder={'Query'}
+          placeholder={'Search for snaps'}
           onChange={e => onChange(e.target.value)}
           value={value} />
       </div>
