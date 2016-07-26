@@ -116,6 +116,7 @@ function snapById(state = {}, action) {
 const rootReducer = combineReducers({
   snapsFromQuery,
   snapById,
+  selectedChannel,
   selectedQuery,
   selectedArch,
   routing

@@ -79,10 +79,10 @@ export function receiveSnap(id, json) {
   }
 }
 
-function fetchQuerySnaps(query, arch) {
+function fetchQuerySnaps(query, arch, channel) {
   return dispatch => {
     dispatch(requestQuerySnaps(query))
-    return fetch(`/api/search/16/stable/${query}/${arch}`)
+    return fetch(`/api/search/16/${channel}/${query}/${arch}`)
       .then(response => response.json())
       .then(json => dispatch(receiveQuerySnaps(query, json)))
   }
@@ -102,10 +102,10 @@ function shouldFetchQuerySnaps(query, state) {
   return true;
 }
 
-export function fetchQuerySnapsIfNeeded(query, arch) {
+export function fetchQuerySnapsIfNeeded(query, arch, channel) {
   return (dispatch, getState) => {
     if (shouldFetchQuerySnaps(query, getState())) {
-      return dispatch(fetchQuerySnaps(query, arch))
+      return dispatch(fetchQuerySnaps(query, arch, channel))
     }
   }
 }

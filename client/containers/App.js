@@ -5,16 +5,19 @@ import classNames from 'classNames';
 import {
   selectArch,
   selectQuery,
+  selectChannel,
   fetchQuerySnapsIfNeeded } from '../actions';
 import Snaps from '../components/Snaps';
 import Query from '../components/Query';
 import ArchPicker from '../components/Arch';
+import ChannelPicker from '../components/Channel';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this)
     this.handleArchChange = this.handleArchChange.bind(this)
+    this.handleChannelChange = this.handleChannelChange.bind(this)
   }
 
   componentDidMount() {
@@ -25,10 +28,11 @@ class App extends Component {
   componentWillReceiveProps(nextProps) {
     if (
       (nextProps.selectedQuery !== this.props.selectedQuery) ||
-        (nextProps.selectedArch !== this.props.selectedArch)
+        (nextProps.selectedArch !== this.props.selectedArch) ||
+        (nextProps.selectedChannel !== this.props.selectedChannel)
     ) {
-      const { dispatch, selectedQuery, selectedArch } = nextProps
-      dispatch(fetchQuerySnapsIfNeeded(selectedQuery, selectedArch))
+      const { dispatch, selectedQuery, selectedArch, selectedChannel } = nextProps
+      dispatch(fetchQuerySnapsIfNeeded(selectedQuery, selectedArch, selectedChannel))
     }
   }
 
@@ -36,12 +40,17 @@ class App extends Component {
     this.props.dispatch(selectQuery(nextQuery))
   }
 
-  handleArchChange(nextArch) {
-    this.props.dispatch(selectArch(nextArch))
+  handleArchChange(next) {
+    this.props.dispatch(selectArch(next))
+  }
+
+  handleChannelChange(next) {
+    console.log(next);
+    this.props.dispatch(selectChannel(next))
   }
 
   render() {
-    const { selectedArch, selectedQuery, snaps, isFetching, lastUpdated } = this.props;
+    const { selectedChannel, selectedArch, selectedQuery, snaps, isFetching, lastUpdated } = this.props;
     const isEmpty = (snaps.length === 0);
 
     return (
@@ -49,10 +58,22 @@ class App extends Component {
         <div className={'b-book__summary'}>
           <div className={'b-book__toc'}>
             <Query value={selectedQuery} onChange={this.handleChange} />
-            <ArchPicker
-              value={selectedArch}
-              onChange={this.handleArchChange}
-              options={['all', 'armhf', 'i386', 'amd64']} />
+            <div className={'b-pickers'}>
+              <div className={'grid'}>
+                <div className={'u_1_3'}>
+                  <ChannelPicker
+                    value={selectedChannel}
+                    onChange={this.handleChannelChange}
+                    options={['stable', 'candidate', 'beta', 'edge']} />
+                </div>
+                <div className={'u_1_3'}>
+                  <ArchPicker
+                    value={selectedArch}
+                    onChange={this.handleArchChange}
+                    options={['all', 'armhf', 'i386', 'amd64']} />
+                </div>
+              </div>
+            </div>
             <Snaps snaps={snaps} onClick={this.handleClick}/>
           </div>
         </div>
@@ -79,7 +100,7 @@ App.propTypes = {
 }
 
 function mapStateToProps(state) {
-  const { selectedArch, selectedQuery, snapsFromQuery} = state;
+  const { selectedChannel, selectedArch, selectedQuery, snapsFromQuery} = state;
   const {
     isFetching,
     lastUpdated,
@@ -91,6 +112,7 @@ function mapStateToProps(state) {
 
   return {
     selectedQuery,
+    selectedChannel,
     selectedArch,
     snaps,
     isFetching,

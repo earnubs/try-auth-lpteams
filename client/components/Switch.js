@@ -2,13 +2,13 @@ import React, { PropTypes, Component } from 'react';
 
 export default class Switch extends Component {
   render() {
-    const { value, onChange, name, checked } = this.props;
+    const { value, onChange, name, type='radio', checked } = this.props;
 
     return (
       <div className={'b-switch'}>
         <input
           name={name}
-          type="radio"
+          type={type}
           value={value}
           checked={checked}
           onChange={e => onChange(e.target.value)}

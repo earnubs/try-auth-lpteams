@@ -58,6 +58,7 @@ app.use(session({
 }));
 
 router.get('/api/search/:series/:channel/:name?/:arch?', (req, res, next) => {
+  console.log(req.params);
   cpi.search(req.params.name, function(result) {
     req.body = result;
     next();

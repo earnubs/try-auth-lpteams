@@ -68,6 +68,12 @@ html, body {
   padding: 20px 0 40px 0;
 }
 
+/** @defing b-pickers; **/
+
+.b-pickers {
+  margin:0 20px;
+}
+
 /** @define b-snap-page; **/
 
 .b-snap-page {
