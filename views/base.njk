@@ -2,28 +2,7 @@
 <html>
   <head>
     <title>Snaps</title>
-    <style>
-      html, body {
-        background-color:#f8ffff;
-        color:#333;
-        font:normal normal 16px/1.3 'Blender Pro', 'Arial', 'Helvetica', sans-serif;
-        letter-spacing:0.4px;
-        text-transform:uppercase;
-        padding: 0;
-        margin: 0;
-        box-sizing: border-box;
-        height:100%;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      .foo {
-        height:100%;
-        width:100%;
-      }
-    </style>
+    <link rel=stylesheet href="/dist/all.css" />
   </head>
   <body>
     <!--
@@ -41,7 +20,7 @@
     {% endif %}
     {% block content %}{% endblock %}
     -->
-    <div id="root" class="foo">{{html|safe}}</div>
+    <div id="root" style="height:100%;">{{html|safe}}</div>
     <script>
       __INITIAL_STATE__ = {{state|dump|safe}};
     </script>

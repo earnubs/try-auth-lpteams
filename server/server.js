@@ -101,7 +101,6 @@ router.get('/snap/:id?', (req, res, next) => {
   const store = configureStore(initialState);
 
   match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
-    console.log(renderProps);
     if (error){
       res.status(500).send(error.message)
     } else if (redirectLocation) {

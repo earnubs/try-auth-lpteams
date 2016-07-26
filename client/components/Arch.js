@@ -7,7 +7,6 @@ export default class Arch extends Component {
 
     return (
       <div className={'b-arch-switch'}>
-        <label>Architecture</label>
         {options.map((option, i) =>
           <Switch
             key={i}
