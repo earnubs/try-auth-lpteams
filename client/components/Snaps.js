@@ -3,11 +3,11 @@ import { Link } from 'react-router';
 
 export default class Snaps extends Component {
   render() {
-    const { snaps } = this.props;
+    const { snaps, channel, arch } = this.props;
     return (
       <div>
           {snaps.map((snap, i) =>
-            <Link to={`/snap/${snap.snap_id}`} key={i} className={'b-snap'}>
+            <Link to={`/snap/16/${channel}/${snap.snap_id}/${arch}`} key={i} className={'b-snap'}>
               <div className={'b-snap__item b-snap__item_hilite'}>
                 {snap.title} {snap.version}
               </div>

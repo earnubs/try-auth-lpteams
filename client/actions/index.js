@@ -110,16 +110,17 @@ export function fetchQuerySnapsIfNeeded(query, arch, channel) {
   }
 }
 
-function fetchSnap(id) {
+function fetchSnap(id, arch, channel) {
   return dispatch => {
     dispatch(requestSnap(id))
-    return fetch(`/api/snap/${id}`)
+    return fetch(`/api/snap/16/${channel}/${id}/${arch}`)
     .then(response => response.json())
     .then(json => dispatch(receiveSnap(id, json)))
   }
 }
 
 function shouldFetchSnap(id, state) {
+  /** FIXME STORE AGAINST series/channel/arch
   const snap = state.snapById[id];
 
   if (!snap) {
@@ -127,12 +128,14 @@ function shouldFetchSnap(id, state) {
   }
 
   return false;
+   **/
+  return true;
 }
 
-export function fetchSnapIfNeeded(id) {
+export function fetchSnapIfNeeded(id, arch, channel) {
   return (dispatch, getState) => {
     if (shouldFetchSnap(id, getState())) {
-      return dispatch(fetchSnap(id));
+      return dispatch(fetchSnap(id, arch, channel));
     }
   }
 }

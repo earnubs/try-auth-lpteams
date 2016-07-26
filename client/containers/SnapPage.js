@@ -11,13 +11,20 @@ class SnapPage extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, params } = this.props
-    dispatch(fetchSnapIfNeeded(params.id));
+    const { dispatch, params } = this.props;
+    const { id, arch, channel } = params;
+    dispatch(fetchSnapIfNeeded(id, arch, channel));
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.id !== this.props.params.id) {
-      this.props.dispatch(fetchSnapIfNeeded(nextProps.params.id));
+    const { dispatch, params } = this.props;
+    const { id, arch, channel } = nextProps.params;
+    if (
+      (id !== params.id) ||
+        (arch !== params.arch) ||
+        (channel !== params.channel)
+    ) {
+      dispatch(fetchSnapIfNeeded(id, arch, channel));
     }
   }
 

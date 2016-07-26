@@ -15,14 +15,14 @@ import ChannelPicker from '../components/Channel';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.handleChange = this.handleChange.bind(this)
-    this.handleArchChange = this.handleArchChange.bind(this)
-    this.handleChannelChange = this.handleChannelChange.bind(this)
+    this.handleChange = this.handleChange.bind(this);
+    this.handleArchChange = this.handleArchChange.bind(this);
+    this.handleChannelChange = this.handleChannelChange.bind(this);
   }
 
   componentDidMount() {
-    const { dispatch, selectedQuery, selectedArch } = this.props
-    dispatch(fetchQuerySnapsIfNeeded(selectedQuery, selectedArch))
+    const { dispatch, selectedQuery, selectedArch, selectedChannel } = this.props;
+    dispatch(fetchQuerySnapsIfNeeded(selectedQuery, selectedArch, selectedChannel));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -74,7 +74,7 @@ class App extends Component {
                 </div>
               </div>
             </div>
-            <Snaps snaps={snaps} onClick={this.handleClick}/>
+            <Snaps snaps={snaps} channel={selectedChannel} arch={selectedArch} onClick={this.handleClick}/>
           </div>
         </div>
         <div className={'b-book__body'}>

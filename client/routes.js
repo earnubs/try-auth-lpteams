@@ -5,6 +5,6 @@ import SnapPage from './containers/SnapPage';
 
 export default (
   <Route path="/" component={App}>
-    <Route path="/snap/:id" component={SnapPage} />
+    <Route path="/snap/:series/:channel/:id/:arch" component={SnapPage} />
   </Route>
 )
