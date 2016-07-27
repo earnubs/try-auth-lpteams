@@ -18,8 +18,7 @@ export default class Snap extends Component {
     if (snap.snap_id) {
       return (
         <div className={'b-snap-page'}>
-          <h1>{snap.alias} {snap.version}</h1>
-          <div>Revision: {snap.revision}</div>
+          <h1>#{snap.revision} | {snap.alias} {snap.version}</h1>
           <div>Name: {snap.name}</div>
           <div>Origin: {snap.origin}</div>
           <div>Support URL: {snap.support_url}</div>

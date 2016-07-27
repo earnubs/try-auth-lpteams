@@ -1,19 +1,21 @@
 import { routerReducer as routing } from 'react-router-redux'
 import { combineReducers } from 'redux';
 import {
-  REQUEST_QUERY_SNAPS,
   RECEIVE_QUERY_SNAPS,
-  REQUEST_SNAP,
   RECEIVE_SNAP,
+  REQUEST_QUERY_SNAPS,
+  REQUEST_SNAP,
   SELECT_ARCH,
   SELECT_CHANNEL,
-  SELECT_SERIES,
-  SELECT_QUERY
+  SELECT_CONFINEMENT,
+  SELECT_QUERY,
+  SELECT_SERIES
 } from '../actionTypes';
 
 const DEFAULT_SERIES = '16';
 const DEFAULT_ARCH = 'all';
 const DEFAULT_CHANNEL = 'stable';
+const DEFAULT_CONFINEMENT = 'strict';
 
 // each reducer handles it's own bit of state
 function selectedSeries(state = DEFAULT_SERIES, action) {
@@ -38,6 +40,15 @@ function selectedChannel(state=DEFAULT_CHANNEL, action) {
   switch (action.type) {
     case SELECT_CHANNEL:
       return action.channel
+    default:
+      return state
+  }
+}
+
+function selectedConfinement(state=DEFAULT_CONFINEMENT, action) {
+  switch (action.type) {
+    case SELECT_CONFINEMENT:
+      return action.confinement
     default:
       return state
   }
@@ -116,6 +127,7 @@ function snapById(state = {}, action) {
 const rootReducer = combineReducers({
   snapsFromQuery,
   snapById,
+  selectedConfinement,
   selectedChannel,
   selectedQuery,
   selectedArch,

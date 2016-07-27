@@ -8,6 +8,7 @@ import {
   RECEIVE_SNAP,
   SELECT_ARCH,
   SELECT_CHANNEL,
+  SELECT_CONFINEMENT,
   SELECT_SERIES,
   SELECT_QUERY,
 } from '../actionTypes';
@@ -30,6 +31,13 @@ export function selectChannel(channel) {
   return {
     type: SELECT_CHANNEL,
     channel
+  }
+}
+
+export function selectConfinement(confinement) {
+  return {
+    type: SELECT_CONFINEMENT,
+    confinement
   }
 }
 
@@ -79,14 +87,15 @@ export function receiveSnap(id, json) {
   }
 }
 
-function fetchQuerySnaps(query, arch, channel) {
+function fetchQuerySnaps(query, arch, channel, confinement) {
   query = encodeURIComponent(query);
   arch = encodeURIComponent(arch);
   channel = encodeURIComponent(channel);
+  confinement = encodeURIComponent(confinement);
 
   return dispatch => {
     dispatch(requestQuerySnaps(query))
-    return fetch(`/api/search/16/${channel}/${query}/${arch}`)
+    return fetch(`/api/search/16/${channel}/${query}/${arch}/${confinement}`)
       .then(response => response.json())
       .then(json => dispatch(receiveQuerySnaps(query, json)))
   }
@@ -106,10 +115,10 @@ function shouldFetchQuerySnaps(query, state) {
   return true;
 }
 
-export function fetchQuerySnapsIfNeeded(query, arch, channel) {
+export function fetchQuerySnapsIfNeeded(query, arch, channel, confinement) {
   return (dispatch, getState) => {
     if (shouldFetchQuerySnaps(query, getState())) {
-      return dispatch(fetchQuerySnaps(query, arch, channel))
+      return dispatch(fetchQuerySnaps(query, arch, channel, confinement))
     }
   }
 }

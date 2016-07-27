@@ -7,11 +7,13 @@ import {
   selectArch,
   selectQuery,
   selectChannel,
+  selectConfinement,
   fetchQuerySnapsIfNeeded } from '../actions';
 import Snaps from '../components/Snaps';
 import Query from '../components/Query';
 import ArchPicker from '../components/Arch';
 import ChannelPicker from '../components/Channel';
+import ConfinementPicker from '../components/Confinement';
 
 class App extends Component {
   constructor(props) {
@@ -19,21 +21,45 @@ class App extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleArchChange = this.handleArchChange.bind(this);
     this.handleChannelChange = this.handleChannelChange.bind(this);
+    this.handleConfinementChange = this.handleConfinementChange.bind(this);
   }
 
   componentDidMount() {
-    const { dispatch, selectedQuery, selectedArch, selectedChannel } = this.props;
-    dispatch(fetchQuerySnapsIfNeeded(selectedQuery, selectedArch, selectedChannel));
+    const {
+      dispatch,
+      selectedQuery,
+      selectedArch,
+      selectedChannel,
+      selectedConfinement
+    } = this.props;
+    dispatch(
+      fetchQuerySnapsIfNeeded(
+        selectedQuery,
+        selectedArch,
+        selectedChannel,
+        selectedConfinement));
   }
 
   componentWillReceiveProps(nextProps) {
     if (
       (nextProps.selectedQuery !== this.props.selectedQuery) ||
         (nextProps.selectedArch !== this.props.selectedArch) ||
-        (nextProps.selectedChannel !== this.props.selectedChannel)
+        (nextProps.selectedChannel !== this.props.selectedChannel) ||
+        (nextProps.selectedConfinement !== this.props.selectedConfinement)
     ) {
-      const { dispatch, selectedQuery, selectedArch, selectedChannel } = nextProps
-      dispatch(fetchQuerySnapsIfNeeded(selectedQuery, selectedArch, selectedChannel))
+      const {
+        dispatch,
+        selectedQuery,
+        selectedArch,
+        selectedChannel,
+        selectedConfinement
+      } = nextProps
+      dispatch(
+        fetchQuerySnapsIfNeeded(
+          selectedQuery,
+          selectedArch,
+          selectedChannel,
+          selectedConfinement))
     }
   }
 
@@ -46,17 +72,27 @@ class App extends Component {
   }
 
   handleChannelChange(next) {
-    console.log(next);
     this.props.dispatch(selectChannel(next))
   }
 
+  handleConfinementChange(next) {
+    this.props.dispatch(selectConfinement(next))
+  }
+
   render() {
-    const { selectedChannel, selectedArch, selectedQuery, snaps, isFetching, lastUpdated } = this.props;
+    const {
+      selectedConfinement,
+      selectedChannel,
+      selectedArch,
+      selectedQuery,
+      snaps,
+      isFetching,
+      lastUpdated } = this.props;
     const isEmpty = (snaps.length === 0);
     let found;
 
     if (!isEmpty) {
-      found = <div>Found {snaps.length || 0} {pluralize('snap', snaps.length)} for query "{selectedQuery}" in series 16, channel {selectedChannel}, architecture {selectedArch}</div>
+      found = <div>Found {snaps.length || 0} {pluralize('snap', snaps.length)}</div>
     }
 
     return (
@@ -77,6 +113,12 @@ class App extends Component {
                     value={selectedArch}
                     onChange={this.handleArchChange}
                     options={['all', 'armhf', 'i386', 'amd64']} />
+                </div>
+                <div className={'u_1_3'}>
+                  <ConfinementPicker
+                    value={selectedConfinement}
+                    onChange={this.handleConfinementChange}
+                    options={['strict', 'devmode']} />
                 </div>
               </div>
               <div className="b-pickers__result">{found}</div>
@@ -107,7 +149,12 @@ App.propTypes = {
 }
 
 function mapStateToProps(state) {
-  const { selectedChannel, selectedArch, selectedQuery, snapsFromQuery} = state;
+  const {
+    selectedConfinement,
+    selectedChannel,
+    selectedArch,
+    selectedQuery,
+    snapsFromQuery} = state;
   const {
     isFetching,
     lastUpdated,
@@ -118,6 +165,7 @@ function mapStateToProps(state) {
   }
 
   return {
+    selectedConfinement,
     selectedQuery,
     selectedChannel,
     selectedArch,

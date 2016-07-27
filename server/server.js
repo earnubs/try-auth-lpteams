@@ -57,14 +57,15 @@ app.use(session({
   saveUninitialized: false
 }));
 
-router.get('/api/search/:series/:channel/:name?/:arch?', (req, res, next) => {
+router.get('/api/search/:series/:channel/:name/:arch/:confinement', (req, res, next) => {
   cpi.search(req.params.name, function(result) {
     req.body = result;
     next();
   }, {
     series: req.params.series,
     arch: req.params.arch,
-    channel: req.params.channel
+    channel: req.params.channel,
+    confinement: req.params.confinement
   });
 
 }, function(req, res) {
