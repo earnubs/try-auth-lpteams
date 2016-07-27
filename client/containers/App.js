@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import classNames from 'classNames';
 import pluralize from 'pluralize';
 import {
   selectArch,
