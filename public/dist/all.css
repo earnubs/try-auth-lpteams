@@ -74,6 +74,10 @@ html, body {
   margin:0 20px;
 }
 
+.b-pickers__result {
+  margin-top:1em;
+}
+
 /** @define b-snap-page; **/
 
 .b-snap-page {
@@ -137,7 +141,6 @@ html, body {
 
 .b-snap__item_hilite {
   font-size: 20px;
-  border-bottom:1px solid #ccc;
   margin-bottom: 5px;
 }
 

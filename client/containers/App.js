@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import classNames from 'classNames';
+import pluralize from 'pluralize';
 import {
   selectArch,
   selectQuery,
@@ -52,6 +53,11 @@ class App extends Component {
   render() {
     const { selectedChannel, selectedArch, selectedQuery, snaps, isFetching, lastUpdated } = this.props;
     const isEmpty = (snaps.length === 0);
+    let found;
+
+    if (!isEmpty) {
+      found = <div>Found {snaps.length || 0} {pluralize('snap', snaps.length)} for query "{selectedQuery}" in series 16, channel {selectedChannel}, architecture {selectedArch}</div>
+    }
 
     return (
       <div className={'b-book'}>
@@ -73,6 +79,7 @@ class App extends Component {
                     options={['all', 'armhf', 'i386', 'amd64']} />
                 </div>
               </div>
+              <div className="b-pickers__result">{found}</div>
             </div>
             <Snaps snaps={snaps} channel={selectedChannel} arch={selectedArch} onClick={this.handleClick}/>
           </div>

@@ -80,6 +80,10 @@ export function receiveSnap(id, json) {
 }
 
 function fetchQuerySnaps(query, arch, channel) {
+  query = encodeURIComponent(query);
+  arch = encodeURIComponent(arch);
+  channel = encodeURIComponent(channel);
+
   return dispatch => {
     dispatch(requestQuerySnaps(query))
     return fetch(`/api/search/16/${channel}/${query}/${arch}`)
