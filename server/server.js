@@ -86,14 +86,15 @@ router.get('/api/snap/:series/:channel/:id/:arch?', (req, res, next) => {
   res.send(req.body);
 });
 
-router.get('/snap/:series/:channel/:id/:arch?', (req, res, next) => {
+router.get('/snap/:series/:channel/:id/:arch/:confinement', (req, res, next) => {
   cpi.snap(req.params.id, function(result) {
     req.body = result;
     next();
   }, {
     series: req.params.series,
     arch: req.params.arch,
-    channel: req.params.channel
+    channel: req.params.channel,
+    confinement: req.params.confinement
   });
 }, (req, res) => {
 
@@ -136,22 +137,6 @@ router.get('/snap/:series/:channel/:id/:arch?', (req, res, next) => {
 
 });
 
-app.use('/', (req, res, next) => {
-  const store = configureStore();
-  const html = renderToString(
-    <Provider store={store}>
-      <App />
-    </Provider>
-  );
-
-  const finalState = store.getState();
-
-  req.renderedHtml = html;
-  req.finalState = finalState;
-
-  next();
-});
-
 app.use((req, res, next) => {
   if (!req.session) {
     return next(new Error('no session, boo!'));
@@ -165,16 +150,31 @@ router.get('/', (req, res) => {
     name = req.session.name;
   }
   const store = configureStore();
-  const html = renderToString(
-    <Provider store={store}>
-      <App />
-    </Provider>
-  );
-  const finalState = store.getState();
 
-  req.renderedHtml = html;
-  req.finalState = finalState;
-  res.render('index', { user: name, html: req.renderedHtml, state: req.finalState });
+  match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
+    if (error){
+      res.status(500).send(error.message)
+    } else if (redirectLocation) {
+      res.redirect(302, redirectLocation.pathname + redirectLocation.search)
+    } else if (renderProps) {
+      // You can also check renderProps.components or renderProps.routes for
+      // your "not found" component or route respectively, and send a 404 as
+      // below, if you're using a catch-all route.
+      const html = renderToString(
+        <Provider store={store}>
+          <RouterContext {...renderProps} />
+        </Provider>
+      )
+      const finalState = store.getState();
+
+      req.renderedHtml = html;
+      req.finalState = finalState;
+
+      res.render('index', { user: name, html: req.renderedHtml, state: req.finalState });
+    } else {
+      res.status(404).send('Not found')
+    }
+  })
 });
 
 

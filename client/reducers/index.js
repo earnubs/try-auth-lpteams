@@ -13,7 +13,7 @@ import {
 } from '../actionTypes';
 
 const DEFAULT_SERIES = '16';
-const DEFAULT_ARCH = 'indep.';
+const DEFAULT_ARCH = 'independent';
 const DEFAULT_CHANNEL = 'stable';
 const DEFAULT_CONFINEMENT = 'strict';
 
@@ -118,6 +118,7 @@ function snapById(state = {}, action) {
   switch (action.type) {
     case REQUEST_SNAP:
     case RECEIVE_SNAP:
+      // FIXME snap_id is not unique across revision
       return {...state, [action.id]: snap(state[action.id], action)}
     default:
       return state;

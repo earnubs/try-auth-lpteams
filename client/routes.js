@@ -1,10 +1,12 @@
 import React from 'react';
-import { Route } from 'react-router';
+import { Route, IndexRoute } from 'react-router';
 import App from './containers/App';
+import Search from './containers/Search';
 import SnapPage from './containers/SnapPage';
 
 export default (
   <Route path="/" component={App}>
-    <Route path="/snap/:series/:channel/:id/:arch" component={SnapPage} />
+    <IndexRoute component={Search} />
+    <Route path="/snap/:series/:channel/:id/:arch/:confinement" component={SnapPage} />
   </Route>
 )

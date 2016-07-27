@@ -133,7 +133,7 @@ function fetchSnap(id, arch, channel) {
 }
 
 function shouldFetchSnap(id, state) {
-  /** FIXME STORE AGAINST series/channel/arch
+  /** FIXME snap_id is not unique across revision
   const snap = state.snapById[id];
 
   if (!snap) {
