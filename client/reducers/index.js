@@ -13,7 +13,7 @@ import {
 } from '../actionTypes';
 
 const DEFAULT_SERIES = '16';
-const DEFAULT_ARCH = 'all';
+const DEFAULT_ARCH = 'indep.';
 const DEFAULT_CHANNEL = 'stable';
 const DEFAULT_CONFINEMENT = 'strict';
 

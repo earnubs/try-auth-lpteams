@@ -111,7 +111,7 @@ class App extends Component {
                   <ArchPicker
                     value={selectedArch}
                     onChange={this.handleArchChange}
-                    options={['all', 'armhf', 'i386', 'amd64']} />
+                    options={['indep.', 'armhf', 'i386', 'amd64']} />
                 </div>
                 <div className={'u_1_3'}>
                   <ConfinementPicker
