@@ -7,6 +7,6 @@ import SnapPage from './containers/SnapPage';
 export default (
   <Route path="/" component={App}>
     <IndexRoute component={Search} />
-    <Route path="/snap/:series/:channel/:id/:arch/:confinement" component={SnapPage} />
+    <Route path="/snap/:id/:series/:arch/" component={SnapPage} />
   </Route>
 )

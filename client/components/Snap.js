@@ -17,29 +17,19 @@ export default class Snap extends Component {
 
     if (snap.snap_id) {
       return (
-        <div className={'b-snap__detail'}>
-          <h1>#{snap.revision} | {snap.alias} {snap.version}</h1>
-          <div>Name: {snap.name}</div>
-          <div>Origin: {snap.origin}</div>
-          <div>Support URL: {snap.support_url}</div>
-          <div>Description: {snap.description}</div>
-          <div>Last updated: {moment(snap.last_updated).format('MMMM Do YYYY, h:mm:ss a')} ({moment(snap.last_updated).fromNow()})</div>
-          <div>Published: {moment(snap.date_published).format('MMMM Do YYYY, h:mm:ss a')} ({moment(snap.date_published).fromNow()})</div>
-          <div>Alias: {snap.alias}</div>
-          <div>Origin: {snap.origin}</div>
-          <div>Licence: {snap.license}</div>
-          <div>Anon Download URL: {snap.anon_download_url}</div>
-          <div>Filesize: {byteSize(snap.binary_filesize, { units: 'iec' })}</div>
-          <div>Confinement: {snap.confinement}</div>
-          <div>ID: {snap.snap_id}</div>
-          <div>Epoch: {snap.epoch}</div>
-          <div>SCAID: {snap.id}</div>
-          <div>Architectures:{' '}
-            {snap.architecture.map((val, i) => <span key={i}>{val} </span>)}
-          </div>
-          <div>Releases: {snap.release.join(', ')}</div>
-          <div>Channels: {snap.channels.join(', ')}</div>
-          <div>Plugs: {snap.plugs.join(', ')}</div>
+        <div className={'b-snap b-snap_detail'}>
+          <div className={'b-snap__revision b-snap__revision_large'}>#{snap.revision} {byteSize(snap.binary_filesize, { units: 'iec' })}</div>
+          <p>{snap.description}</p>
+          <p>Published: {moment(snap.date_published).format('MMMM Do YYYY, h:mm:ss a')} ({moment(snap.date_published).fromNow()})</p>
+          <p>Last updated: {moment(snap.last_updated).format('MMMM Do YYYY, h:mm:ss a')} ({moment(snap.last_updated).fromNow()})</p>
+          <p>Support URL: {snap.support_url}</p>
+          <p>Licence: {snap.license}</p>
+          <p>Anon Download URL: <a href={snap.anon_download_url}>ilink</a></p>
+          <p>ID: {snap.snap_id}</p>
+          <p>Epoch: {snap.epoch}</p>
+          <p>SCAID: {snap.id}</p>
+          <p>Channels: {snap.channels.join(', ')}</p>
+          <p>Plugs: {snap.plugs.join(', ')}</p>
         </div>
       );
     } else {

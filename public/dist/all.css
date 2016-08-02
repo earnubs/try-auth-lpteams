@@ -9,14 +9,31 @@ html, body {
   color:#bedb39;
 }
 
+a:link,
+a:visited,
+a:hover,
+a:active {
+  color:#bedb39;
+}
+
+.b-results {
+}
+
+.b-heading {
+  font-size: 26px;
+}
+
 /** @define b-control; **/
 .b-control {
-  margin:0 20px;
+  padding:10px 20px;
+  margin:0 0 10px 0;
+  background-color: rgba(0,0,0,0.1);
 }
 
 .b-control__box {
   display: flex;
-  margin:20px 0;
+  margin:20px auto;
+  max-width:800px;
 }
 
 .b-control__query-box {
@@ -33,6 +50,10 @@ html, body {
   font-size:11px;
 }
 
+.b-control__title {
+  flex: 1;
+}
+
 /** @define b-snap-query; **/
 
 .b-query {
@@ -43,10 +64,10 @@ html, body {
 .b-query__input {
   box-sizing: border-box;
   width:100%;
-  padding:5px;
+  padding:5px 10px;
   margin:0;
   line-height:40px;
-  border:1px solid rgba(64,64,64,0.1);
+  border:none;
   background-color:rgba(0,0,0,0.3);
   font-size:13px;
   font-family: 'Ubuntu', sans-serif;
@@ -63,11 +84,9 @@ html, body {
 /** @define b-snap; ***/
 
 .b-snap {
-  margin:1px 10px;
-  padding:10px 10px;
+  margin:1px 0;
+  padding:10px 60px;
   display: block;
-  border-radius: 3px;
-  border: 1px solid transparent;
   font-size:11px;
   transition: border 200ms;
 }
@@ -81,10 +100,7 @@ html, body {
 }
 
 .b-snap:hover {
-  border: 1px solid #1f8a70;
-}
-
-.b-snap__item {
+  background-color: rgba(0,0,0,0.1);
 }
 
 .b-snap__revision,
@@ -92,18 +108,19 @@ html, body {
   color:#1f8a70;
 }
 
-.b-snap__item_hilite {
-  font-size: 20px;
-  margin-bottom: 5px;
-  color:#ffe11a;
+.b-snap_detail {
+  margin:20px auto;
+  max-width: 800px;
+  padding:0;
+  background-color: inherit;
 }
 
-.b-snap__item_lolite {
+.b-snap_detail:hover {
+  background-color: inherit;
 }
 
-
-.b-snap__detail {
-  margin:20px;
+.b-snap__revision_large {
+  font-size:28px;
 }
 
 /* @define grid */

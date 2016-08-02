@@ -3,24 +3,20 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import pluralize from 'pluralize';
 import {
+  fetchQuerySnapsIfNeeded,
   selectArch,
-  selectQuery,
-  selectChannel,
-  selectConfinement,
-  fetchQuerySnapsIfNeeded } from '../actions';
+  selectQuery
+} from '../actions';
 import Snaps from '../components/Snaps';
 import Query from '../components/Query';
 import ArchPicker from '../components/Arch';
-import ChannelPicker from '../components/Channel';
-import ConfinementPicker from '../components/Confinement';
+import { ARCH_OPTIONS } from '../config';
 
 class Search extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleArchChange = this.handleArchChange.bind(this);
-    this.handleChannelChange = this.handleChannelChange.bind(this);
-    this.handleConfinementChange = this.handleConfinementChange.bind(this);
   }
 
   componentDidMount() {
@@ -28,37 +24,29 @@ class Search extends Component {
       dispatch,
       selectedQuery,
       selectedArch,
-      selectedChannel,
-      selectedConfinement
     } = this.props;
     dispatch(
       fetchQuerySnapsIfNeeded(
         selectedQuery,
-        selectedArch,
-        selectedChannel,
-        selectedConfinement));
+        selectedArch
+      ));
   }
 
   componentWillReceiveProps(nextProps) {
     if (
-      (nextProps.selectedQuery !== this.props.selectedQuery) ||
-        (nextProps.selectedArch !== this.props.selectedArch) ||
-        (nextProps.selectedChannel !== this.props.selectedChannel) ||
-        (nextProps.selectedConfinement !== this.props.selectedConfinement)
+      nextProps.selectedQuery !== this.props.selectedQuery ||
+      nextProps.selectedArch !== this.props.selectedArch
     ) {
       const {
         dispatch,
         selectedQuery,
-        selectedArch,
-        selectedChannel,
-        selectedConfinement
-      } = nextProps
+        selectedArch
+      } = nextProps;
+
       dispatch(
         fetchQuerySnapsIfNeeded(
           selectedQuery,
-          selectedArch,
-          selectedChannel,
-          selectedConfinement))
+          selectedArch))
     }
   }
 
@@ -70,18 +58,9 @@ class Search extends Component {
     this.props.dispatch(selectArch(next))
   }
 
-  handleChannelChange(next) {
-    this.props.dispatch(selectChannel(next))
-  }
-
-  handleConfinementChange(next) {
-    this.props.dispatch(selectConfinement(next))
-  }
 
   render() {
     const {
-      selectedConfinement,
-      selectedChannel,
       selectedArch,
       selectedQuery,
       snaps,
@@ -89,7 +68,7 @@ class Search extends Component {
       lastUpdated } = this.props;
     const isEmpty = (snaps.length === 0);
 
-    let found = <div>Found <b>{snaps.length || 0}</b> {pluralize('snap', snaps.length)} for "{selectedQuery}" in series 16, {selectedChannel}, {selectedArch}, {selectedConfinement} confinement.</div>
+    let found = <div>Found <b>{snaps.length || 0}</b> {pluralize('snap', snaps.length)} for "{selectedQuery}" in {selectedArch}, series 16.</div>
 
     return (
       <div className={'b-search'}>
@@ -100,31 +79,15 @@ class Search extends Component {
               <div className="b-control__result">{found}</div>
             </div>
             <div className={'b-control__switch-box'}>
-              <div className={'grid'}>
-                <div className={'u_1_3'}>
-                  <ChannelPicker
-                    value={selectedChannel}
-                    onChange={this.handleChannelChange}
-                    options={['stable', 'candidate', 'beta', 'edge']} />
-                </div>
-                <div className={'u_1_3'}>
-                  <ArchPicker
-                    value={selectedArch}
-                    onChange={this.handleArchChange}
-                    options={['independent', 'armhf', 'i386', 'amd64']} />
-                </div>
-                <div className={'u_1_3'}>
-                  <ConfinementPicker
-                    value={selectedConfinement}
-                    onChange={this.handleConfinementChange}
-                    options={['strict', 'devmode']} />
-                </div>
-              </div>
+              <ArchPicker
+                value={selectedArch}
+                onChange={this.handleArchChange}
+                options={ ARCH_OPTIONS }
+              />
             </div>
           </div>
         </div>
-        {this.props.children}
-        <Snaps snaps={snaps} channel={selectedChannel} arch={selectedArch} confinement={selectedConfinement} onClick={this.handleClick}/>
+        <Snaps snaps={snaps} arch={selectedArch} onClick={this.handleClick}/>
       </div>
     )
   }
@@ -140,8 +103,6 @@ Search.propTypes = {
 
 function mapStateToProps(state) {
   const {
-    selectedConfinement,
-    selectedChannel,
     selectedArch,
     selectedQuery,
     snapsFromQuery} = state;
@@ -155,9 +116,7 @@ function mapStateToProps(state) {
   }
 
   return {
-    selectedConfinement,
     selectedQuery,
-    selectedChannel,
     selectedArch,
     snaps,
     isFetching,

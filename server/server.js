@@ -57,12 +57,27 @@ app.use(session({
   saveUninitialized: false
 }));
 
-router.get('/api/search/:series/:channel/:name/:arch/:confinement', (req, res, next) => {
+// A name exists within a series
+router.get('/api/search/:series/:name/:arch', (req, res, next) => {
   cpi.search(req.params.name, function(result) {
     req.body = result;
     next();
   }, {
     series: req.params.series,
+    arch: req.params.arch
+  });
+
+}, function(req, res) {
+  res.send(req.body);
+});
+
+// id exists outside a series
+router.get('/api/snap/:id/:series/:arch/:channel/:confinement', (req, res, next) => {
+  cpi.snap(req.params.id, function(result) {
+    req.body = result;
+    next();
+  }, {
+    series: req.params.series,
     arch: req.params.arch,
     channel: req.params.channel,
     confinement: req.params.confinement
@@ -72,29 +87,13 @@ router.get('/api/search/:series/:channel/:name/:arch/:confinement', (req, res, n
   res.send(req.body);
 });
 
-router.get('/api/snap/:series/:channel/:id/:arch?', (req, res, next) => {
+router.get('/snap/:id/:series/:arch/', (req, res, next) => {
   cpi.snap(req.params.id, function(result) {
     req.body = result;
     next();
   }, {
     series: req.params.series,
-    arch: req.params.arch,
-    channel: req.params.channel
-  });
-
-}, function(req, res) {
-  res.send(req.body);
-});
-
-router.get('/snap/:series/:channel/:id/:arch/:confinement', (req, res, next) => {
-  cpi.snap(req.params.id, function(result) {
-    req.body = result;
-    next();
-  }, {
-    series: req.params.series,
-    arch: req.params.arch,
-    channel: req.params.channel,
-    confinement: req.params.confinement
+    arch: req.params.arch
   });
 }, (req, res) => {
 

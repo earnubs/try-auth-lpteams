@@ -90,12 +90,10 @@ export function receiveSnap(id, json) {
 function fetchQuerySnaps(query, arch, channel, confinement) {
   query = encodeURIComponent(query);
   arch = encodeURIComponent(arch);
-  channel = encodeURIComponent(channel);
-  confinement = encodeURIComponent(confinement);
 
   return dispatch => {
     dispatch(requestQuerySnaps(query))
-    return fetch(`/api/search/16/${channel}/${query}/${arch}/${confinement}`)
+    return fetch(`/api/search/16/${query}/${arch}`)
       .then(response => response.json())
       .then(json => dispatch(receiveQuerySnaps(query, json)))
   }
@@ -123,10 +121,10 @@ export function fetchQuerySnapsIfNeeded(query, arch, channel, confinement) {
   }
 }
 
-function fetchSnap(id, arch, channel) {
+function fetchSnap(id, arch, channel, confinement) {
   return dispatch => {
     dispatch(requestSnap(id))
-    return fetch(`/api/snap/16/${channel}/${id}/${arch}`)
+    return fetch(`/api/snap/${id}/16/${arch}/${channel}/${confinement}`)
     .then(response => response.json())
     .then(json => dispatch(receiveSnap(id, json)))
   }
@@ -145,10 +143,10 @@ function shouldFetchSnap(id, state) {
   return true;
 }
 
-export function fetchSnapIfNeeded(id, arch, channel) {
+export function fetchSnapIfNeeded(id, arch, channel, confinement) {
   return (dispatch, getState) => {
     if (shouldFetchSnap(id, getState())) {
-      return dispatch(fetchSnap(id, arch, channel));
+      return dispatch(fetchSnap(id, arch, channel, confinement));
     }
   }
 }
