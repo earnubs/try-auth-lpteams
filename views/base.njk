@@ -5,7 +5,6 @@
     <link rel=stylesheet href="/dist/all.css" />
   </head>
   <body>
-    <!--
     {% if not user %}
     <p>
     <a href="/">Home</a> |
@@ -19,7 +18,6 @@
     </p>
     {% endif %}
     {% block content %}{% endblock %}
-    -->
     <div id="root" style="height:100%;">{{html|safe}}</div>
     <script>
       __INITIAL_STATE__ = {{state|dump|safe}};

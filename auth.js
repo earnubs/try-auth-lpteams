@@ -1,30 +1,31 @@
-"use strict";
-const MacaroonsBuilder = require('macaroons.js').MacaroonsBuilder;
-const MacaroonsConstants = require('macaroons.js').MacaroonsConstants;
-const MacaroonsVerifier = require('macaroons.js').MacaroonsVerifier;
-const express = require('express');
-const openid = require('openid');
-const request = require('superagent');
-const router = express.Router();
+'use strict';
+import { MacaroonsBuilder } from 'macaroons.js';
+import { Router } from 'express';
+import openid from 'openid';
+import request from 'superagent';
 
-const Teams = require('./teams.js');
-const Macaroons = require('./macaroons.js');
+import Teams from './teams';
+import Macaroons from './macaroons.js';
+
+const router = Router();
+
+const SSO_HOST = 'login.staging.ubuntu.com';
+const SSO_URL = `https://${SSO_HOST}`;
+const MYAPPS_URL = 'https://myapps.developer.staging.ubuntu.com';
 
 openid['LaunchpadTeams'] = Teams;
 openid['Macaroons'] = Macaroons;
-
-let relyingParty;
 
 /** Format a macaroon and it's associated discharge
  * @param {Object}
  * @return {String} A string suitable to use in an Authorization header.
 **/
-let _macaroon_auth = (macaroon, discharge) => {
+const _macaroon_auth = (macaroon, discharge) => {
 
   let macaroonObj = MacaroonsBuilder.deserialize(macaroon);
   let dischargeObj = MacaroonsBuilder.deserialize(discharge);
 
-  letddischargeBound = MacaroonsBuilder.modify(macaroonObj)
+  let dischargeBound = MacaroonsBuilder.modify(macaroonObj)
     .prepare_for_request(dischargeObj)
     .getMacaroon();
 
@@ -37,16 +38,16 @@ let _macaroon_auth = (macaroon, discharge) => {
  * @param {String} macaroon serialized macaroon
  * @return {String} login.ubuntu.com cid
 **/
-let extractCaveatId = (macaroon) => {
+const extractCaveatId = (macaroon) => {
   let m = MacaroonsBuilder.deserialize(macaroon);
   let ssocid;
   m.inspect();
 
-  m.caveatPackets.some((packet, i) => {
-    if (packet.valueAsText === 'login.staging.ubuntu.com') {
+  m.caveatPackets.some((packet) => {
+    if (packet.valueAsText === SSO_HOST) {
       return true;
     }
-    if (packet.type === 3) { // FIXME use constant
+    if (packet.type === 3) {
       ssocid = packet.valueAsText;
     }
   });
@@ -54,13 +55,16 @@ let extractCaveatId = (macaroon) => {
   return ssocid;
 };
 
+let macaroon; // not sure yet where to put this?
+let relyingParty; // or this
+
 /**
  * @return {Function} superagent request
  * @param {Array} permissions
  */
-let _getSCAMacaroon = (req, res, next) => {
+const requestSCAMacaroon = (req, res, next) => {
   request
-    .post('https://myapps.developer.staging.ubuntu.com/dev/api/acl/')
+    .post(`${MYAPPS_URL}/dev/api/acl/`)
     .type('json')
     .send({'permissions': ['package_access']})
     .end((err, res) => {
@@ -69,13 +73,13 @@ let _getSCAMacaroon = (req, res, next) => {
         next(new Error(err));
       }
 
-      let caveatId = extractCaveatId(res.body.macaroon);
-
-      _setRelyingParty(caveatId, next);
+      req.caveatId = extractCaveatId(res.body.macaroon);
+      macaroon = res.body.macaroon;
+      next();
     });
 };
 
-let _setRelyingParty = (caveatId, next) => {
+const createRelyingParty = (req, res, next) => {
   relyingParty = new openid.RelyingParty(
     'http://localhost:3000/login/verify', // Verification URL (yours)
     'http://localhost:3000', // Realm (optional, specifies realm for OpenID authentication)
@@ -93,7 +97,7 @@ let _setRelyingParty = (caveatId, next) => {
       ]
     }),
     new openid.Macaroons({
-      'caveat_id': caveatId
+      'caveat_id': req.caveatId
     })
     ]
   );
@@ -105,7 +109,7 @@ let _verifySCAMacaroon = (discharge, root) => {
   let auth = _macaroon_auth(root, discharge);
 
   request
-    .post('https://myapps.developer.staging.ubuntu.com/dev/api/acl/verify/')
+    .post(`${MYAPPS_URL}/dev/api/acl/verify/`)
     .send({
       'auth_data': {
         'http_uri': 'http://localhost:3000',
@@ -116,17 +120,17 @@ let _verifySCAMacaroon = (discharge, root) => {
     .end((err,res) => {
       if (err) {
         console.log('error:', err);
-      };
+      }
       console.log('verify response:', res.body);
-    })
+    });
 };
 
 router.get('/', (req, res) => {
   res.render('login');
 });
 
-router.get('/authenticate', _getSCAMacaroon, (req, res) => {
-  let identifier = 'https://login.staging.ubuntu.com/';
+router.get('/authenticate', requestSCAMacaroon, createRelyingParty, (req, res) => {
+  let identifier = SSO_URL;
 
   // Resolve identifier, associate, and build authentication URL
   relyingParty.authenticate(identifier, false, (error, authUrl) => {
@@ -152,6 +156,11 @@ router.post('/verify', (req, res) => {
       req.session.discharge = result.discharge;
       req.session.teams = result.teams;
     }
+    /**
+     * macaroon is what we got back from SCA
+     */
+    _verifySCAMacaroon(req.session.discharge, macaroon);
+
     res.redirect('/');
   });
 });
