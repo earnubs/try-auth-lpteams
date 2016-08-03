@@ -1,10 +1,9 @@
-"use strict";
+'use strict';
 import RedisConnect from 'connect-redis';
 import express, { Router } from 'express';
 import methodOverride from 'method-override';
 import morgan from 'morgan';
 import nunjucks from 'nunjucks';
-import request from 'superagent';
 import session from 'express-session';
 import util from 'util';
 import webpack from 'webpack';
@@ -14,12 +13,9 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { Provider } from 'react-redux';
-import { match, RouterContext } from 'react-router'
+import { match, RouterContext } from 'react-router';
 
-import { fetchSnapIfNeeded } from '../client/actions';
 import configureStore from '../client/store/configureStore';
-import App from '../client/containers/App';
-import SnapPage from '../client/containers/SnapPage';
 
 import authRouter from '../auth.js';
 import config from '../webpack.config';
@@ -30,13 +26,13 @@ const router = Router();
 
 const RedisStore = RedisConnect(session);
 const app = express();
-const compiler = webpack(config)
+const compiler = webpack(config);
 
 app.use(webpackDevMiddleware(compiler, {
   hot: true,
   noInfo: true,
-  publicPath: config.output.publicPath }))
-app.use(webpackHotMiddleware(compiler))
+  publicPath: config.output.publicPath }));
+app.use(webpackHotMiddleware(compiler));
 app.use(express.static('public'));
 
 nunjucks.configure('views', {
@@ -111,9 +107,9 @@ router.get('/snap/:id/:series/:arch/', (req, res, next) => {
 
   match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
     if (error){
-      res.status(500).send(error.message)
+      res.status(500).send(error.message);
     } else if (redirectLocation) {
-      res.redirect(302, redirectLocation.pathname + redirectLocation.search)
+      res.redirect(302, redirectLocation.pathname + redirectLocation.search);
     } else if (renderProps) {
       // You can also check renderProps.components or renderProps.routes for
       // your "not found" component or route respectively, and send a 404 as
@@ -122,7 +118,7 @@ router.get('/snap/:id/:series/:arch/', (req, res, next) => {
         <Provider store={store}>
           <RouterContext {...renderProps} />
         </Provider>
-      )
+      );
       const finalState = store.getState();
 
       req.renderedHtml = html;
@@ -130,9 +126,9 @@ router.get('/snap/:id/:series/:arch/', (req, res, next) => {
 
       res.render('index', { html: req.renderedHtml, state: req.finalState });
     } else {
-      res.status(404).send('Not found')
+      res.status(404).send('Not found');
     }
-  })
+  });
 
 });
 
@@ -152,9 +148,9 @@ router.get('/', (req, res) => {
 
   match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
     if (error){
-      res.status(500).send(error.message)
+      res.status(500).send(error.message);
     } else if (redirectLocation) {
-      res.redirect(302, redirectLocation.pathname + redirectLocation.search)
+      res.redirect(302, redirectLocation.pathname + redirectLocation.search);
     } else if (renderProps) {
       // You can also check renderProps.components or renderProps.routes for
       // your "not found" component or route respectively, and send a 404 as
@@ -163,7 +159,7 @@ router.get('/', (req, res) => {
         <Provider store={store}>
           <RouterContext {...renderProps} />
         </Provider>
-      )
+      );
       const finalState = store.getState();
 
       req.renderedHtml = html;
@@ -171,9 +167,9 @@ router.get('/', (req, res) => {
 
       res.render('index', { user: name, html: req.renderedHtml, state: req.finalState });
     } else {
-      res.status(404).send('Not found')
+      res.status(404).send('Not found');
     }
-  })
+  });
 });
 
 
