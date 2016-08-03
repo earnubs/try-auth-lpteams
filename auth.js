@@ -1,4 +1,3 @@
-'use strict';
 import { MacaroonsBuilder } from 'macaroons.js';
 import { Router } from 'express';
 import openid from 'openid';
@@ -20,7 +19,7 @@ openid['Macaroons'] = Macaroons;
  * @param {Object}
  * @return {String} A string suitable to use in an Authorization header.
 **/
-const _macaroon_auth = (macaroon, discharge) => {
+const formatMacaroonAuthHeader = (macaroon, discharge) => {
 
   let macaroonObj = MacaroonsBuilder.deserialize(macaroon);
   let dischargeObj = MacaroonsBuilder.deserialize(discharge);
@@ -55,9 +54,6 @@ const extractCaveatId = (macaroon) => {
   return ssocid;
 };
 
-let macaroon; // not sure yet where to put this?
-let relyingParty; // or this
-
 /**
  * @return {Function} superagent request
  * @param {Array} permissions
@@ -74,13 +70,13 @@ const requestSCAMacaroon = (req, res, next) => {
       }
 
       req.caveatId = extractCaveatId(res.body.macaroon);
-      macaroon = res.body.macaroon;
+      req.app.locals.macaroon = res.body.macaroon;
       next();
     });
 };
 
 const createRelyingParty = (req, res, next) => {
-  relyingParty = new openid.RelyingParty(
+  req.app.locals.relyingParty = new openid.RelyingParty(
     'http://localhost:3000/login/verify', // Verification URL (yours)
     'http://localhost:3000', // Realm (optional, specifies realm for OpenID authentication)
     false, // Use stateless verification
@@ -105,6 +101,11 @@ const createRelyingParty = (req, res, next) => {
   next();
 };
 
+/**
+ * @argument {String} discharge SSO discarge macaroon
+ * @argument {Object} root MyApps root macaroon
+ */
+/**
 let _verifySCAMacaroon = (discharge, root) => {
   let auth = _macaroon_auth(root, discharge);
 
@@ -124,6 +125,7 @@ let _verifySCAMacaroon = (discharge, root) => {
       console.log('verify response:', res.body);
     });
 };
+**/
 
 router.get('/', (req, res) => {
   res.render('login');
@@ -133,7 +135,7 @@ router.get('/authenticate', requestSCAMacaroon, createRelyingParty, (req, res) =
   let identifier = SSO_URL;
 
   // Resolve identifier, associate, and build authentication URL
-  relyingParty.authenticate(identifier, false, (error, authUrl) => {
+  req.app.locals.relyingParty.authenticate(identifier, false, (error, authUrl) => {
     if (error) {
       res.writeHead(200);
       res.end('Authentication failed: ' + error.message);
@@ -150,16 +152,13 @@ router.get('/authenticate', requestSCAMacaroon, createRelyingParty, (req, res) =
 });
 
 router.post('/verify', (req, res) => {
-  relyingParty.verifyAssertion(req, (error, result) => {
+  req.app.locals.relyingParty.verifyAssertion(req, (error, result) => {
     if (!error && result.authenticated) {
       req.session.name = result.fullname;
       req.session.discharge = result.discharge;
       req.session.teams = result.teams;
+      req.session.macaroonAuthHeader = formatMacaroonAuthHeader(req.app.locals.macaroon, req.session.discharge);
     }
-    /**
-     * macaroon is what we got back from SCA
-     */
-    _verifySCAMacaroon(req.session.discharge, macaroon);
 
     res.redirect('/');
   });

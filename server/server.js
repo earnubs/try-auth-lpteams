@@ -18,6 +18,7 @@ import { match, RouterContext } from 'react-router';
 import configureStore from '../client/store/configureStore';
 
 import authRouter from '../auth.js';
+import apiRouter from '../api.js';
 import config from '../webpack.config';
 import cpi from '../lib/cpi';
 import routes from '../client/routes';
@@ -52,36 +53,6 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
-
-// A name exists within a series
-router.get('/api/search/:series/:name/:arch', (req, res, next) => {
-  cpi.search(req.params.name, function(result) {
-    req.body = result;
-    next();
-  }, {
-    series: req.params.series,
-    arch: req.params.arch
-  });
-
-}, function(req, res) {
-  res.send(req.body);
-});
-
-// id exists outside a series
-router.get('/api/snap/:id/:series/:arch/:channel/:confinement', (req, res, next) => {
-  cpi.snap(req.params.id, function(result) {
-    req.body = result;
-    next();
-  }, {
-    series: req.params.series,
-    arch: req.params.arch,
-    channel: req.params.channel,
-    confinement: req.params.confinement
-  });
-
-}, function(req, res) {
-  res.send(req.body);
-});
 
 router.get('/snap/:id/:series/:arch/', (req, res, next) => {
   cpi.snap(req.params.id, function(result) {
@@ -129,7 +100,6 @@ router.get('/snap/:id/:series/:arch/', (req, res, next) => {
       res.status(404).send('Not found');
     }
   });
-
 });
 
 app.use((req, res, next) => {
@@ -172,9 +142,9 @@ router.get('/', (req, res) => {
   });
 });
 
-
 app.use('/', router);
 app.use('/login', authRouter);
+app.use('/api', apiRouter);
 
 const server = app.listen(3000, () => {
   const host = server.address().address;
