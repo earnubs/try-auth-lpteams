@@ -3,10 +3,8 @@ import { connect } from 'react-redux';
 import {
   fetchSnapIfNeeded,
   selectChannel,
-  selectConfinement,
-  selectSnapId
+  selectConfinement
 } from '../actions';
-import ArchPicker from '../components/Arch';
 import Snap from '../components/Snap.js';
 import ChannelPicker from '../components/Channel';
 import ConfinementPicker from '../components/Confinement';
@@ -64,37 +62,29 @@ class SnapPage extends Component {
   }
 
   handleChannelChange(next) {
-    this.props.dispatch(selectChannel(next))
+    this.props.dispatch(selectChannel(next));
   }
 
   handleConfinementChange(next) {
-    this.props.dispatch(selectConfinement(next))
+    this.props.dispatch(selectConfinement(next));
   }
 
   render() {
     // and series too
     const {
       snap,
-      selectedArch,
+      params,
       selectedChannel,
       selectedConfinement
     } = this.props;
 
-    let title;
-
-    if (snap) {
-      title = (
-        <div>
-          <div className="b-heading">{snap.alias} {snap.version} {snap.architecture.join(', ')}</div>
-        </div>
-      )
-    }
-
     return (
-    <div className="b-snappage">
-      <div className={'b-control__title'}>
-        {title}
-      </div>
+      <div className="b-snappage">
+        <div className={'b-control__title'}>
+          <div>
+            <div className="b-heading">{params.id}</div>
+          </div>
+        </div>
         <div className={'b-control'}>
           <div className={'b-control__box'}>
             <div className={'b-control__switch-box'}>
@@ -116,9 +106,17 @@ class SnapPage extends Component {
           </div>
         </div>
         {snap ? <Snap snap={snap} /> : <div>Accessing…</div>}
-      </div>)
-
+      </div>
+    );
   }
+}
+
+SnapPage.propTypes = {
+  dispatch: PropTypes.func,
+  snap: PropTypes.object,
+  selectedChannel: PropTypes.string,
+  selectedConfinement: PropTypes.string,
+  params: PropTypes.object
 };
 
 function mapStateToProps(state, ownProps) {
@@ -134,7 +132,7 @@ function mapStateToProps(state, ownProps) {
     snap
   } = snapById[ownProps.params.id] || {
     isFetching: true
-  }
+  };
 
   return {
     snap,
@@ -142,7 +140,7 @@ function mapStateToProps(state, ownProps) {
     lastUpdated,
     selectedChannel,
     selectedConfinement
-  }
+  };
 }
 
 export default connect(mapStateToProps)(SnapPage);

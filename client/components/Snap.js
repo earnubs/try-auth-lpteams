@@ -4,18 +4,10 @@ import byteSize from 'byte-size';
 
 export default class Snap extends Component {
 
-  shouldComponentUpdate (nextProps, nextState) {
-    if (nextProps.snap) {
-      return true;
-    }
-
-    return false;
-  }
-
   render() {
     const { snap } = this.props;
 
-    if (snap.snap_id) {
+    if (snap && snap.snap_id) {
       return (
         <div className={'b-snap b-snap_detail'}>
           <div className={'b-snap__revision b-snap__revision_large'}>#{snap.revision} {byteSize(snap.binary_filesize, { units: 'iec' })}</div>
@@ -33,7 +25,7 @@ export default class Snap extends Component {
         </div>
       );
     } else {
-      return <div>{'No snap'}</div>
+      return (<div>{'No revision under this configuration'}</div>);
     }
 
   }
@@ -41,4 +33,4 @@ export default class Snap extends Component {
 
 Snap.propTypes = {
   snap: PropTypes.object
-}
+};
