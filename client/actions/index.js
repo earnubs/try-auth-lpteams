@@ -9,7 +9,6 @@ import {
   SELECT_CHANNEL,
   SELECT_CONFINEMENT,
   SELECT_SERIES,
-  SELECT_SNAP_ID,
   SELECT_QUERY,
 } from '../actionTypes';
 
@@ -45,13 +44,6 @@ export function selectQuery(query) {
   return {
     type: SELECT_QUERY,
     query
-  };
-}
-
-export function selectSnapId(id) {
-  return {
-    type: SELECT_SNAP_ID,
-    id
   };
 }
 
@@ -93,8 +85,10 @@ function fetchQuerySnaps(query, arch) {
 
   return dispatch => {
     dispatch(requestQuerySnaps(query));
-    return fetch(`/api/search/16/${query}/${arch}`)
-      .then(response => response.json())
+    return fetch(`http://localhost:3000/api/search/16/${query}/${arch}`)
+      .then(response => {
+        return response.json();
+      })
       .then(json => dispatch(receiveQuerySnaps(query, json)));
   };
 }
@@ -113,10 +107,10 @@ function shouldFetchQuerySnaps(query, state) {
   return true;
 }
 
-export function fetchQuerySnapsIfNeeded(query, arch, channel, confinement) {
+export function fetchQuerySnapsIfNeeded(query, arch) {
   return (dispatch, getState) => {
     if (shouldFetchQuerySnaps(query, getState())) {
-      return dispatch(fetchQuerySnaps(query, arch, channel, confinement));
+      return dispatch(fetchQuerySnaps(query, arch));
     }
   };
 }
