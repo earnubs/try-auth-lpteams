@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import cpi from './lib/cpi';
+import cpi from '../lib/cpi';
 const router = Router();
 
 router.get('/search/:series/:name/:arch', (req, res, next) => {

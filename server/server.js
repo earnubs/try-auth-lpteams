@@ -17,8 +17,8 @@ import { match, RouterContext } from 'react-router';
 
 import configureStore from '../client/store/configureStore';
 
-import authRouter from '../auth.js';
-import apiRouter from '../api.js';
+import authRouter from './auth.js';
+import apiRouter from './api.js';
 import config from '../webpack.config';
 import cpi from '../lib/cpi';
 import routes from '../client/routes';
@@ -63,6 +63,10 @@ router.get('/snap/:id/:series/:arch/', (req, res, next) => {
     arch: req.params.arch
   });
 }, (req, res) => {
+  let name;
+  if (req.session) {
+    name = req.session.name;
+  }
 
   const initialState = {
     snapById: {
@@ -95,7 +99,7 @@ router.get('/snap/:id/:series/:arch/', (req, res, next) => {
       req.renderedHtml = html;
       req.finalState = finalState;
 
-      res.render('index', { html: req.renderedHtml, state: req.finalState });
+      res.render('index', { user: name, html: req.renderedHtml, state: req.finalState });
     } else {
       res.status(404).send('Not found');
     }
@@ -138,6 +142,16 @@ router.get('/', (req, res) => {
       res.render('index', { user: name, html: req.renderedHtml, state: req.finalState });
     } else {
       res.status(404).send('Not found');
+    }
+  });
+});
+
+router.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log('session destroy error');
+    } else {
+      res.redirect('/');
     }
   });
 });

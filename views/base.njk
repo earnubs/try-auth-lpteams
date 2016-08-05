@@ -5,18 +5,13 @@
     <link rel=stylesheet href="/dist/all.css" />
   </head>
   <body>
-    {% if not user %}
-    <p>
-    <a href="/">Home</a> |
-    <a href="/login">Log In</a>
-    </p>
-    {% else %}
-    <p>
-    <a href="/">Home</a> |
-    <a href="/account">Account</a> |
-    <a href="/logout">Log Out</a>
-    </p>
-    {% endif %}
+    <div class="b-layout__wrapper">
+      {% if not user %}
+      <a href="/login">Log In</a>
+      {% else %}
+      <a href="/logout">Log out {{user}}</a>
+      {% endif %}
+    </div>
     {% block content %}{% endblock %}
     <div id="root" style="height:100%;">{{html|safe}}</div>
     <script>

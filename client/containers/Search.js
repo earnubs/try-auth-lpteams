@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
 import pluralize from 'pluralize';
 import {
   fetchQuerySnapsIfNeeded,
@@ -46,16 +45,16 @@ class Search extends Component {
       dispatch(
         fetchQuerySnapsIfNeeded(
           selectedQuery,
-          selectedArch))
+          selectedArch));
     }
   }
 
   handleChange(nextQuery) {
-    this.props.dispatch(selectQuery(nextQuery))
+    this.props.dispatch(selectQuery(nextQuery));
   }
 
   handleArchChange(next) {
-    this.props.dispatch(selectArch(next))
+    this.props.dispatch(selectArch(next));
   }
 
 
@@ -63,12 +62,10 @@ class Search extends Component {
     const {
       selectedArch,
       selectedQuery,
-      snaps,
-      isFetching,
-      lastUpdated } = this.props;
-    const isEmpty = (snaps.length === 0);
+      snaps
+      } = this.props;
 
-    let found = <div>Found <b>{snaps.length || 0}</b> {pluralize('snap', snaps.length)} for "{selectedQuery}" in {selectedArch}, series 16.</div>
+    let found = <div>Found <b>{snaps.length || 0}</b> {pluralize('snap', snaps.length)} for "{selectedQuery}" in {selectedArch}, series 16.</div>;
 
     return (
       <div className={'b-search'}>
@@ -89,17 +86,18 @@ class Search extends Component {
         </div>
         <Snaps snaps={snaps} arch={selectedArch} onClick={this.handleClick}/>
       </div>
-    )
+    );
   }
-};
+}
 
 Search.propTypes = {
   selectedQuery: PropTypes.string.isRequired,
+  selectedArch: PropTypes.string.isRequired,
   snaps: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
   lastUpdated: PropTypes.number,
   dispatch: PropTypes.func.isRequired
-}
+};
 
 function mapStateToProps(state) {
   const {
@@ -113,7 +111,7 @@ function mapStateToProps(state) {
   } = snapsFromQuery || {
     isFetching: true,
     items: []
-  }
+  };
 
   return {
     selectedQuery,
@@ -121,7 +119,7 @@ function mapStateToProps(state) {
     snaps,
     isFetching,
     lastUpdated
-  }
+  };
 }
 
-export default connect(mapStateToProps)(Search)
+export default connect(mapStateToProps)(Search);

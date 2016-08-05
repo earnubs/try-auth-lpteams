@@ -16,7 +16,9 @@ a:active {
   color:#bedb39;
 }
 
-.b-results {
+.b-layout__wrapper {
+  width:800px;
+  margin:0 auto;
 }
 
 .b-heading {
