@@ -10,7 +10,7 @@ import ChannelPicker from '../components/Channel';
 import ConfinementPicker from '../components/Confinement';
 import { CHANNEL_OPTIONS, CONFINEMENT_OPTIONS } from '../config';
 
-class SnapPage extends Component {
+class SnapDetail extends Component {
   constructor(props) {
     super(props);
     this.handleChannelChange = this.handleChannelChange.bind(this);
@@ -79,30 +79,34 @@ class SnapPage extends Component {
     } = this.props;
 
     return (
-      <div className="b-snappage">
-        <div className={'b-control__title'}>
-          <div>
-            <div className="b-heading">{params.id}</div>
+      <div className={'b-package-data'}>
+        <div className={'b-package-data__wrap'}>
+          <div className={'b-package-data__title'}>
+            <div className={'b-package-data__title_headline'}>{params.id}</div>
+            Series 16, {params.arch}
           </div>
         </div>
-        <div className={'b-control'}>
-          <div className={'b-control__box'}>
-            <div className={'b-control__switch-box'}>
-              <div className={'grid'}>
-                <div className={'u_1_2'}>
-                  <ChannelPicker
-                    value={selectedChannel}
-                    onChange={this.handleChannelChange}
-                    options={ CHANNEL_OPTIONS } />
-                </div>
-                <div className={'u_1_2'}>
-                  <ConfinementPicker
-                    value={selectedConfinement}
-                    onChange={this.handleConfinementChange}
-                    options={ CONFINEMENT_OPTIONS } />
-                </div>
+        <div className={'b-filter'}>
+          <div className={'b-filter__wrap'}>
+            <div className={'grid'}>
+              <div className={'u_1_4'}>
+                <ChannelPicker
+                  value={selectedChannel}
+                  onChange={this.handleChannelChange}
+                  options={ CHANNEL_OPTIONS } />
+              </div>
+              <div className={'u_1_4'}>
+                <ConfinementPicker
+                  value={selectedConfinement}
+                  onChange={this.handleConfinementChange}
+                  options={ CONFINEMENT_OPTIONS } />
               </div>
             </div>
+          </div>
+        </div>
+        <div className={'b-cli'}>
+          <div className={'b-cli__wrap'}>
+            $ snap install --edge --devmode
           </div>
         </div>
         {snap ? <Snap snap={snap} /> : <div>Accessing…</div>}
@@ -111,7 +115,7 @@ class SnapPage extends Component {
   }
 }
 
-SnapPage.propTypes = {
+SnapDetail.propTypes = {
   dispatch: PropTypes.func,
   snap: PropTypes.object,
   selectedChannel: PropTypes.string,
@@ -143,4 +147,4 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps)(SnapPage);
+export default connect(mapStateToProps)(SnapDetail);

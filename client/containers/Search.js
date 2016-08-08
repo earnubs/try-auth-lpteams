@@ -65,26 +65,35 @@ class Search extends Component {
       snaps
       } = this.props;
 
-    let found = <div>Found <b>{snaps.length || 0}</b> {pluralize('snap', snaps.length)} for "{selectedQuery}" in {selectedArch}, series 16.</div>;
+    let found = <div className="b-filter__result">Found {snaps.length || 0} {pluralize('snap', snaps.length)} for "{selectedQuery}" in {selectedArch}, series 16.</div>;
 
     return (
-      <div className={'b-search'}>
-        <div className={'b-control'}>
-          <div className={'b-control__box'}>
-            <div className={'b-control__query-box'}>
-              <Query value={selectedQuery} onChange={this.handleChange} />
-              <div className="b-control__result">{found}</div>
-            </div>
-            <div className={'b-control__switch-box'}>
-              <ArchPicker
-                value={selectedArch}
-                onChange={this.handleArchChange}
-                options={ ARCH_OPTIONS }
-              />
+      <div className={'b-package-search'}>
+        <div className={'b-filter'}>
+          <div className={'b-filter__wrap'}>
+            <div className={'grid'}>
+              <div className={'u_1_2'}>
+                <Query value={selectedQuery} onChange={this.handleChange} />
+                {found}
+              </div>
+              <div className={'u_1_4'}>
+                <ArchPicker
+                  value={selectedArch}
+                  onChange={this.handleArchChange}
+                  options={ ARCH_OPTIONS }
+                />
+              </div>
             </div>
           </div>
         </div>
-        <Snaps snaps={snaps} arch={selectedArch} onClick={this.handleClick}/>
+        <div className={'b-cli'}>
+          <div className={'b-cli__wrap'}>
+            user@{selectedArch} $ snap find {selectedQuery} --fuzzy
+          </div>
+        </div>
+        <div className={'b-package-search__wrap'}>
+          <Snaps snaps={snaps} arch={selectedArch} onClick={this.handleClick}/>
+        </div>
       </div>
     );
   }

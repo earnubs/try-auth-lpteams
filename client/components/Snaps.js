@@ -5,15 +5,16 @@ export default class Snaps extends Component {
   render() {
     const { snaps, arch } = this.props;
     return (
-      <div className={'b-results'}>
+      <div className={'b-package-data'}>
         {snaps.map((snap, i) =>
-          <Link to={`/snap/${snap.alias}/16/${arch}/`} key={i} className={'b-snap'}>
-            <div className={'b-snap__title'}>
-              {snap.title} <b>{snap.version}</b> <span className={'b-snap__publisher'}>{snap.publisher}</span>
+          <Link to={`/snap/${snap.alias}/16/${arch}/`} key={i} className={'b-package-data__link'}>
+            <div className={'b-package-data__title b-package-data__title_compact'}>
+              <div className={'b-package-data__title_headline'}>
+                {snap.title} {snap.version}
+              </div>
+              <div>{snap.publisher}</div>
             </div>
-            <div className={'b-snap__summary'}>
-              {snap.summary}
-            </div>
+            <div className={'b-package-data__item'}>{snap.summary}</div>
           </Link>
         )}
       </div>

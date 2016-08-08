@@ -97,7 +97,7 @@ router.get('/snap/:id/:series/:arch/', (req, res, next) => {
       const finalState = store.getState();
 
       req.renderedHtml = html;
-      req.finalState = finalState;
+      req.finalState = finalState || '';
 
       res.render('index', { user: name, html: req.renderedHtml, state: req.finalState });
     } else {
