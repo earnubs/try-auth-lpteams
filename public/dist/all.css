@@ -56,7 +56,7 @@ a:active {
   flex: 1;
 }
 
-/** @define b-snap-query; **/
+/** @define b-query; **/
 
 .b-query {
   box-sizing: border-box;
@@ -88,7 +88,7 @@ a:active {
 .b-snap {
   margin:1px 0;
   padding:10px 60px;
-  display: block;
+  display:block;
   font-size:11px;
   transition: border 200ms;
 }
@@ -105,6 +105,7 @@ a:active {
   background-color: rgba(0,0,0,0.1);
 }
 
+.b-snap__summary,
 .b-snap__revision,
 .b-snap__publisher {
   color:#1f8a70;
@@ -237,19 +238,4 @@ a:active {
 
 .b-switch input:checked + label {
   color:#bedb39;
-}
-
-
-/** scrollbars **/
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-::-webkit-scrollbar-track {
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background-color: #ccc;
 }

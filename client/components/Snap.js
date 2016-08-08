@@ -10,18 +10,18 @@ export default class Snap extends Component {
     if (snap && snap.snap_id) {
       return (
         <div className={'b-snap b-snap_detail'}>
-          <div className={'b-snap__revision b-snap__revision_large'}>#{snap.revision} {byteSize(snap.binary_filesize, { units: 'iec' })}</div>
           <p>{snap.description}</p>
-          <p>Published: {moment(snap.date_published).format('MMMM Do YYYY, h:mm:ss a')} ({moment(snap.date_published).fromNow()})</p>
-          <p>Last updated: {moment(snap.last_updated).format('MMMM Do YYYY, h:mm:ss a')} ({moment(snap.last_updated).fromNow()})</p>
-          <p>Support URL: {snap.support_url}</p>
-          <p>Licence: {snap.license}</p>
+          <p>{snap.license}</p>
+          <p>Published {moment(snap.date_published).format('MMMM Do YYYY, h:mm:ss a')} ({moment(snap.date_published).fromNow()})</p>
+          <p><a href={snap.support_url}>{snap.title} support URL</a></p>
+
+          <div className={'b-snap__revision b-snap__revision_large'}>#{snap.revision}  | {snap.version}</div>
+          <p>{byteSize(snap.binary_filesize, { units: 'iec' })}</p>
+          <p>Last updated {moment(snap.last_updated).format('MMMM Do YYYY, h:mm:ss a')} ({moment(snap.last_updated).fromNow()})</p>
           <p>Anon Download URL: <a href={snap.anon_download_url}>ilink</a></p>
-          <p>ID: {snap.snap_id}</p>
-          <p>Epoch: {snap.epoch}</p>
-          <p>SCAID: {snap.id}</p>
           <p>Channels: {snap.channels.join(', ')}</p>
           <p>Plugs: {snap.plugs.join(', ')}</p>
+          <pre><code>{JSON.stringify(snap)}</code></pre>
         </div>
       );
     } else {
