@@ -16,11 +16,12 @@ export default class Arch extends Component {
             onChange={onChange} />
           )}
         </div>
-    )
-  };
-};
+    );
+  }
+}
 
 Arch.propTypes = {
   onChange: PropTypes.func.isRequired,
-  options: PropTypes.array.isRequired
-}
+  options: PropTypes.array.isRequired,
+  value: PropTypes.string.isRequired
+};
