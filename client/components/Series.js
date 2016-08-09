@@ -10,6 +10,7 @@ export default class Series extends Component {
         {options.map((option, i) =>
           <Switch
             key={i}
+            label={`Series ${value}`}
             value={option}
             name={'series'}
             checked={(value === option)}

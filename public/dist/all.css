@@ -106,7 +106,7 @@ a:active {
 .b-filter {
   background-color: #003c4f;
   padding: 1em;
-  margin: 1em 0 0 0;
+  margin: 1em 0;
 }
 
 .b-filter__result {
