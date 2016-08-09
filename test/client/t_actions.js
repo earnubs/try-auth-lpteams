@@ -107,10 +107,10 @@ describe('Action creators suite', () => {
 
     it('fetchQuerySnapsIfNeeded success, empty results', () => {
 
-      const [query, arch] = ['foo', 'amd64'];
+      const [series, arch, query] = ['foo', 16, 'amd64'];
 
       nock('http://localhost:3000/')
-        .get(`/api/search/16/${query}/${arch}`)
+        .get(`/api/search/${series}/${arch}/${query}`)
         .reply(200, []);
 
 
@@ -126,7 +126,7 @@ describe('Action creators suite', () => {
         }
       });
 
-      return store.dispatch(actions.fetchQuerySnapsIfNeeded(query, arch))
+      return store.dispatch(actions.fetchQuerySnapsIfNeeded(series, arch, query))
         .then(() => { // return of async actions
           expect(store.getActions()).toEqual(expectedActions);
         });
