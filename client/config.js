@@ -11,9 +11,8 @@ const DEFAULT_SERIES = SERIES_OPTIONS[0];
 const DEFAULT_FUZZY = true;
 const DEFAULT_QUERY = '';
 
-const HOST = 'http://localhost:3000';
-const API_SEARCH = `${HOST}/api/search`;
-const API_DETAIL = `${HOST}/api/details`;
+const API_SEARCH = '/api/search';
+const API_DETAIL = '/api/details';
 
 export {
   API_DETAIL,
