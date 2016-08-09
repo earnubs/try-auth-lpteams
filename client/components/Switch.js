@@ -4,6 +4,8 @@ export default class Switch extends Component {
   render() {
     const { value, onChange, name, type='radio', checked, label } = this.props;
 
+    console.log(type);
+
     return (
       <div className={'b-switch'}>
         <input
@@ -12,7 +14,7 @@ export default class Switch extends Component {
           value={value}
           checked={checked}
           onChange={e =>
-            onChange((type === 'radio') ? e.target.value : e.target.checked)}
+            onChange((type == 'radio') ? e.target.value : e.target.checked)}
           id={'id_' + value} />
         <label htmlFor={'id_' + value}>{(label) ? label : value}</label>
       </div>

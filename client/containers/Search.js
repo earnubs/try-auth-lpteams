@@ -131,7 +131,7 @@ class Search extends Component {
             </div>
           </div>
         </div>
-        <Snaps snaps={snaps} arch={selectedArch} onClick={this.handleClick}/>
+        <Snaps snaps={snaps} series={selectedSeries} arch={selectedArch} />
       </div>
     );
   }

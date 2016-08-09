@@ -27,8 +27,9 @@ class SnapDetail extends Component {
     const {
       id,
       arch,
+      series,
     } = params;
-    dispatch(fetchSnapIfNeeded(id, arch, selectedChannel, selectedConfinement));
+    dispatch(fetchSnapIfNeeded(id, series, arch, selectedChannel, selectedConfinement));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -41,6 +42,7 @@ class SnapDetail extends Component {
     if (
       nextProps.params.id !== params.id ||
       nextProps.params.arch !== params.arch ||
+      nextProps.params.series !== params.series ||
       nextProps.selectedChannel !== selectedChannel ||
       nextProps.selectedConfinement !== selectedConfinement
     ) {
@@ -50,11 +52,13 @@ class SnapDetail extends Component {
       } = nextProps;
       const {
         id,
-        arch
+        arch,
+        series
       } = nextProps.params;
 
       dispatch(fetchSnapIfNeeded(
         id,
+        series,
         arch,
         selectedChannel,
         selectedConfinement));
@@ -83,7 +87,7 @@ class SnapDetail extends Component {
         <div className={'b-package-data__wrap'}>
           <div className={'b-package-data__title'}>
             <div className={'b-package-data__title_headline'}>{params.id}</div>
-            Series 16, {params.arch}
+            Series {params.series}, {params.arch}
           </div>
         </div>
         <div className={'b-filter'}>

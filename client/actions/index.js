@@ -119,10 +119,12 @@ export function fetchQuerySnapsIfNeeded(series, arch, query, isFuzzy) {
   };
 }
 
-function fetchSnap(id, arch, channel, confinement) {
+function fetchSnap(id, series, arch, channel, confinement) {
+  const url = `${API_DETAIL}/${id}/${series}/${arch}/${channel}/${confinement}`;
+
   return dispatch => {
     dispatch(requestSnap(id));
-    return fetch(`/api/details/${id}/16/${arch}/${channel}/${confinement}`)
+    return fetch(url)
     .then(response => response.json())
     .then(json => dispatch(receiveSnap(id, json)));
   };
@@ -141,10 +143,10 @@ function shouldFetchSnap(/** id, state **/) {
   return true;
 }
 
-export function fetchSnapIfNeeded(id, arch, channel, confinement) {
+export function fetchSnapIfNeeded(id, series, arch, channel, confinement) {
   return (dispatch, getState) => {
     if (shouldFetchSnap(id, getState())) {
-      return dispatch(fetchSnap(id, arch, channel, confinement));
+      return dispatch(fetchSnap(id, series, arch, channel, confinement));
     }
   };
 }

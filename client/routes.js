@@ -7,6 +7,6 @@ import SnapDetail from './containers/SnapDetail';
 export default (
   <Route path="/" component={App}>
     <IndexRoute component={Search} />
-    <Route path="/snap/:id/:series/:arch/" component={SnapDetail} />
+    <Route path="/snap/:series/:arch/:id" component={SnapDetail} />
   </Route>
 );

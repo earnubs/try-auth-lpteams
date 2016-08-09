@@ -3,11 +3,11 @@ import { Link } from 'react-router';
 
 export default class Snaps extends Component {
   render() {
-    const { snaps, arch } = this.props;
+    const { snaps, series, arch } = this.props;
     return (
       <div className={'b-package-data'}>
         {snaps.map((snap, i) =>
-          <Link to={`/snap/${snap.alias}/16/${arch}/`} key={i} className={'b-package-data__link'}>
+          <Link to={`/snap/${series}/${arch}/${snap.alias}/`} key={i} className={'b-package-data__link'}>
             <div className={'b-package-data__wrap'}>
               <div className={'b-package-data__title b-package-data__title_compact'}>
                 <div className={'b-package-data__title_headline'}>
@@ -26,5 +26,6 @@ export default class Snaps extends Component {
 
 Snaps.propTypes = {
   snaps: PropTypes.array.isRequired,
-  arch: PropTypes.string.isRequired
+  arch: PropTypes.string.isRequired,
+  series: PropTypes.string.isRequired
 };

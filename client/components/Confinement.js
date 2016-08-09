@@ -11,17 +11,17 @@ export default class Confinement extends Component {
           <Switch
             key={i}
             value={option}
-            type={'checkbox'}
-            name={'arch'}
+            name={'confinement'}
             checked={(value === option)}
             onChange={onChange} />
           )}
         </div>
-    )
-  };
-};
+    );
+  }
+}
 
 Confinement.propTypes = {
   onChange: PropTypes.func.isRequired,
-  options: PropTypes.array.isRequired
-}
+  options: PropTypes.array.isRequired,
+  value: PropTypes.string.isRequired
+};

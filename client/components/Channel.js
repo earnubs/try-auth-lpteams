@@ -11,17 +11,17 @@ export default class Channel extends Component {
           <Switch
             key={i}
             value={option}
-            type={'checkbox'}
-            name={'arch'}
+            name={'channel'}
             checked={(value === option)}
             onChange={onChange} />
           )}
         </div>
-    )
-  };
-};
+    );
+  }
+}
 
 Channel.propTypes = {
   onChange: PropTypes.func.isRequired,
-  options: PropTypes.array.isRequired
-}
+  options: PropTypes.array.isRequired,
+  value: PropTypes.string.isRequired
+};

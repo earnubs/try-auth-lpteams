@@ -1,7 +1,7 @@
 const ARCH_OPTIONS = ['amd64', 'armhf', 'i386', 'independent'];
 const CHANNEL_OPTIONS = ['stable', 'candidate', 'beta', 'edge'];
 const CONFINEMENT_OPTIONS = ['strict', 'devmode'];
-const SERIES_OPTIONS = ['16', '15.04-core'];
+const SERIES_OPTIONS = ['16'];
 const FUZZY_SEARCH = 'Fuzzy searching';
 
 const DEFAULT_ARCH = ARCH_OPTIONS[0];
@@ -13,7 +13,7 @@ const DEFAULT_QUERY = '';
 
 const HOST = 'http://localhost:3000';
 const API_SEARCH = `${HOST}/api/search`;
-const API_DETAIL = `${HOST}/api/detail`;
+const API_DETAIL = `${HOST}/api/details`;
 
 export {
   API_DETAIL,
