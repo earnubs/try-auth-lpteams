@@ -4,8 +4,6 @@ export default class Switch extends Component {
   render() {
     const { value, onChange, name, type='radio', checked, label } = this.props;
 
-    console.log(type);
-
     return (
       <div className={'b-switch'}>
         <input
