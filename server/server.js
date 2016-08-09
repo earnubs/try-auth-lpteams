@@ -146,21 +146,11 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.log('session destroy error');
-    } else {
-      res.redirect('/');
-    }
-  });
-});
-
 app.use('/', router);
 app.use('/login', authRouter);
 app.use('/api', apiRouter);
 
-const server = app.listen(3000, () => {
+const server = app.listen(80, () => {
   const host = server.address().address;
   const port = server.address().port;
 
