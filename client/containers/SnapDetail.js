@@ -82,6 +82,11 @@ class SnapDetail extends Component {
       selectedConfinement
     } = this.props;
 
+    const noSnap =
+      <div className={'b-package-data__wrap'}>
+        Finding ...
+      </div>;
+
     return (
       <div className={'b-package-data'}>
         <div className={'b-package-data__wrap'}>
@@ -108,7 +113,7 @@ class SnapDetail extends Component {
             </div>
           </div>
         </div>
-        {snap ? <Snap snap={snap} /> : <div>Accessing…</div>}
+        {snap ? <Snap snap={snap} /> : noSnap}
       </div>
     );
   }

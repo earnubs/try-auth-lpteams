@@ -41,7 +41,7 @@ app.set('view engine', 'njk');
 app.use(morgan('combined'));
 app.use(methodOverride());
 
-router.get('/snap/:id/:series/:arch/', (req, res, next) => {
+router.get('/snap/:series/:arch/:id', (req, res, next) => {
   cpi.snap(req.params.id, function(result) {
     req.body = result;
     next();
