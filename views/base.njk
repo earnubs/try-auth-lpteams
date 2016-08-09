@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Snaps</title>
+    <link rel=stylesheet href="/dist/all.css" />
+  </head>
+  <body>
+    <!--
+    <div class="b-nav">
+      <div class="b-nav__wrap">
+        {% if not user %}
+        <a href="/login">Log In</a>
+        {% else %}
+        <a href="/logout">Log out {{user}}</a>
+        {% endif %}
+      </div>
+    </div>
+    -->
+    {% block content %}{% endblock %}
+    <div id="root" style="height:100%;">{{html|safe}}</div>
+    <script>
+      __INITIAL_STATE__ = {{state|dump|safe}};
+    </script>
+    <script src="/static/bundle.js"></script>
+  </body>
+</html>

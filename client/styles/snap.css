@@ -1,0 +1,25 @@
+.b-snap {
+  margin:1rem 0;
+  padding:1rem 0;
+  display: block;
+}
+
+.b-snap:link {
+  text-decoration:none;
+  color:#333;
+}
+
+.b-snap__item_key {
+  padding-right:2rem;
+  width: 100px;
+  display:inline-block;
+  text-align:right;
+  color: #aabbbb;
+}
+
+.b-snap__item_value {
+}
+
+.b-snap__item_hilite {
+  font-size: 28px;
+}

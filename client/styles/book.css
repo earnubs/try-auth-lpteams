@@ -1,0 +1,63 @@
+html, body {
+  height: 100%;
+}
+
+.b-book {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.b-book__summary {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 400px;
+  color: #364149;
+  border-right:1px solid rgba(64,64,64,0.1);
+}
+
+.b-book__toc {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.b-book__body {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 400px;
+  bottom: 0;
+  overflow-y: auto;
+  color: #000;
+}
+
+.b-book__inner {
+  min-height: calc(100% - 50px);
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+.page {
+  position: relative;
+  outline: 0;
+}
+
+.page__inner {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px 0 40px 0;
+}
+
