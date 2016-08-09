@@ -3,6 +3,15 @@ import { combineReducers } from 'redux';
 import * as defaults from '../config';
 import * as types from '../actionTypes';
 
+function selectedSeries(state=defaults.DEFAULT_SERIES, action) {
+  switch (action.type) {
+  case types.SELECT_SERIES:
+    return action.series;
+  default:
+    return state;
+  }
+}
+
 function selectedArch(state=defaults.DEFAULT_ARCH, action) {
   switch (action.type) {
   case types.SELECT_ARCH:
@@ -30,7 +39,7 @@ function selectedConfinement(state=defaults.DEFAULT_CONFINEMENT, action) {
   }
 }
 
-function selectedQuery(state='', action) {
+function selectedQuery(state=defaults.DEFAULT_QUERY, action) {
   switch (action.type) {
   case types.SELECT_QUERY:
     return action.query;
@@ -103,14 +112,15 @@ function snapById(state = {}, action) {
 }
 
 const rootReducer = combineReducers({
-  snapsFromQuery,
-  snapById,
-  selectedConfinement,
-  selectedChannel,
-  selectedQuery,
-  selectedArch,
   beFuzzy,
-  routing
+  routing,
+  selectedArch,
+  selectedChannel,
+  selectedConfinement,
+  selectedQuery,
+  selectedSeries,
+  snapById,
+  snapsFromQuery
 });
 
 export default rootReducer;

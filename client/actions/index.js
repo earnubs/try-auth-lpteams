@@ -76,11 +76,12 @@ export function receiveSnap(id, json) {
   };
 }
 
-function fetchQuerySnaps(query, arch, isFuzzy) {
+function fetchQuerySnaps(series, arch, query, isFuzzy) {
+  series = encodeURIComponent(series);
   query = encodeURIComponent(query);
   arch = encodeURIComponent(arch);
 
-  let url = `${API_SEARCH}/16/${query}/${arch}`;
+  let url = `${API_SEARCH}/${series}/${arch}/${query}`;
 
   if (isFuzzy) {
     url += '?fuzzy=true';
@@ -110,10 +111,10 @@ function shouldFetchQuerySnaps(query, state) {
   return true;
 }
 
-export function fetchQuerySnapsIfNeeded(query, arch, isFuzzy) {
+export function fetchQuerySnapsIfNeeded(series, arch, query, isFuzzy) {
   return (dispatch, getState) => {
     if (shouldFetchQuerySnaps(query, getState())) {
-      return dispatch(fetchQuerySnaps(query, arch, isFuzzy));
+      return dispatch(fetchQuerySnaps(series, arch, query, isFuzzy));
     }
   };
 }

@@ -159,6 +159,12 @@ a:active {
   outline:none;
 }
 
+/** @define b-fuzzy-switch; **/
+
+.b-fuzzy-switch {
+  margin-top:25px;
+}
+
 /* @define grid */
 
 .grid {

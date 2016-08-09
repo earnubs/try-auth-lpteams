@@ -2,7 +2,7 @@ import { Router } from 'express';
 import cpi from '../lib/cpi';
 const router = Router();
 
-router.get('/search/:series/:name/:arch', (req, res, next) => {
+router.get('/search/:series/:arch/:name', (req, res, next) => {
   let auth;
   if (req.app.locals.macaroonAuthHeader) {
     auth = req.app.locals.macaroonAuthHeader;

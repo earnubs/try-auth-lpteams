@@ -5,14 +5,17 @@ import {
   fetchQuerySnapsIfNeeded,
   isFuzzy,
   selectArch,
-  selectQuery
+  selectQuery,
+  selectSeries
 } from '../actions';
 import Fuzzy from '../components/Fuzzy';
 import Snaps from '../components/Snaps';
 import Query from '../components/Query';
+import SeriesPicker from '../components/Series';
 import ArchPicker from '../components/Arch';
 import {
   ARCH_OPTIONS,
+  SERIES_OPTIONS,
   FUZZY_SEARCH
 } from '../config';
 
@@ -21,21 +24,24 @@ class Search extends Component {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleArchChange = this.handleArchChange.bind(this);
+    this.handleSeriesChange = this.handleSeriesChange.bind(this);
     this.handleFuzzyChange = this.handleFuzzyChange.bind(this);
   }
 
   componentDidMount() {
     const {
+      beFuzzy,
       dispatch,
-      selectedQuery,
       selectedArch,
-      beFuzzy
+      selectedQuery,
+      selectedSeries
     } = this.props;
 
     dispatch(
       fetchQuerySnapsIfNeeded(
-        selectedQuery,
+        selectedSeries,
         selectedArch,
+        selectedQuery,
         beFuzzy
       )
     );
@@ -43,22 +49,25 @@ class Search extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (
+      nextProps.selectedSeries !== this.props.selectedSeries ||
       nextProps.selectedQuery !== this.props.selectedQuery ||
       nextProps.selectedArch !== this.props.selectedArch ||
       nextProps.beFuzzy !== this.props.beFuzzy
     ) {
       const {
+        beFuzzy,
         dispatch,
-        selectedQuery,
         selectedArch,
-        beFuzzy
+        selectedQuery,
+        selectedSeries
       } = nextProps;
 
       dispatch(
         fetchQuerySnapsIfNeeded(
-          selectedQuery,
-          selectedArch,
-          beFuzzy
+        selectedSeries,
+        selectedArch,
+        selectedQuery,
+        beFuzzy
         )
       );
     }
@@ -66,6 +75,10 @@ class Search extends Component {
 
   handleChange(nextQuery) {
     this.props.dispatch(selectQuery(nextQuery));
+  }
+
+  handleSeriesChange(next) {
+    this.props.dispatch(selectSeries(next));
   }
 
   handleArchChange(next) {
@@ -78,9 +91,10 @@ class Search extends Component {
 
   render() {
     const {
+      beFuzzy,
       selectedArch,
       selectedQuery,
-      beFuzzy,
+      selectedSeries,
       snaps
       } = this.props;
 
@@ -96,17 +110,22 @@ class Search extends Component {
                 {found}
               </div>
               <div className={'u_1_4'}>
-                <ArchPicker
-                  value={selectedArch}
-                  onChange={this.handleArchChange}
-                  options={ ARCH_OPTIONS }
+                <SeriesPicker
+                  value={selectedSeries}
+                  onChange={this.handleSeriesChange}
+                  options={ SERIES_OPTIONS }
                 />
-              </div>
-              <div className={'u_1_4'}>
                 <Fuzzy
                   value={ FUZZY_SEARCH }
                   onChange={this.handleFuzzyChange}
                   checked={ beFuzzy }
+                />
+              </div>
+              <div className={'u_1_4'}>
+                <ArchPicker
+                  value={selectedArch}
+                  onChange={this.handleArchChange}
+                  options={ ARCH_OPTIONS }
                 />
               </div>
             </div>
@@ -119,21 +138,24 @@ class Search extends Component {
 }
 
 Search.propTypes = {
-  selectedQuery: PropTypes.string.isRequired,
-  selectedArch: PropTypes.string.isRequired,
-  snaps: PropTypes.array.isRequired,
-  isFetching: PropTypes.bool.isRequired,
   beFuzzy: PropTypes.bool.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool.isRequired,
   lastUpdated: PropTypes.number,
-  dispatch: PropTypes.func.isRequired
+  selectedArch: PropTypes.string.isRequired,
+  selectedQuery: PropTypes.string.isRequired,
+  selectedSeries: PropTypes.string.isRequired,
+  snaps: PropTypes.array.isRequired
 };
 
 function mapStateToProps(state) {
   const {
+    beFuzzy,
     selectedArch,
     selectedQuery,
-    beFuzzy,
-    snapsFromQuery} = state;
+    selectedSeries,
+    snapsFromQuery
+  } = state;
   const {
     isFetching,
     lastUpdated,
@@ -144,12 +166,13 @@ function mapStateToProps(state) {
   };
 
   return {
-    selectedQuery,
-    selectedArch,
     beFuzzy,
-    snaps,
     isFetching,
-    lastUpdated
+    lastUpdated,
+    selectedArch,
+    selectedQuery,
+    selectedSeries,
+    snaps
   };
 }
 
