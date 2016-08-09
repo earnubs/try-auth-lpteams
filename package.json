@@ -9,6 +9,9 @@
     "test:watch": "npm test -- --watch",
     "build": "webpack"
   },
+  "engines": {
+    "node": "4.2.2"
+  },
   "keywords": [],
   "author": "Stephen Stewart <stephen.stewart@canonical.com>",
   "license": "ISC",
@@ -28,13 +31,11 @@
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.11.5",
     "byte-size": "^2.0.0",
-    "connect-redis": "^3.1.0",
     "css-loader": "^0.23.1",
     "eslint-plugin-react": "^5.2.2",
     "expect": "^1.20.2",
     "expect.js": "^0.3.1",
     "express": "^4.14.0",
-    "express-session": "^1.13.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "isomorphic-fetch": "^2.2.1",
     "macaroons.js": "^0.3.6",

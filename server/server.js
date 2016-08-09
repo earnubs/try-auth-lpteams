@@ -1,10 +1,8 @@
 'use strict';
-import RedisConnect from 'connect-redis';
 import express, { Router } from 'express';
 import methodOverride from 'method-override';
 import morgan from 'morgan';
 import nunjucks from 'nunjucks';
-import session from 'express-session';
 import util from 'util';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
@@ -25,7 +23,6 @@ import routes from '../client/routes';
 
 const router = Router();
 
-const RedisStore = RedisConnect(session);
 const app = express();
 const compiler = webpack(config);
 
@@ -44,15 +41,6 @@ nunjucks.configure('views', {
 app.set('view engine', 'njk');
 app.use(morgan('combined'));
 app.use(methodOverride());
-app.use(session({
-  store: new RedisStore({
-    host: 'localhost',
-    port: 6379
-  }),
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: false
-}));
 
 router.get('/snap/:id/:series/:arch/', (req, res, next) => {
   cpi.snap(req.params.id, function(result) {
@@ -63,10 +51,6 @@ router.get('/snap/:id/:series/:arch/', (req, res, next) => {
     arch: req.params.arch
   });
 }, (req, res) => {
-  let name;
-  if (req.session) {
-    name = req.session.name;
-  }
 
   const initialState = {
     snapById: {
@@ -99,25 +83,14 @@ router.get('/snap/:id/:series/:arch/', (req, res, next) => {
       req.renderedHtml = html;
       req.finalState = finalState || '';
 
-      res.render('index', { user: name, html: req.renderedHtml, state: req.finalState });
+      res.render('index', { html: req.renderedHtml, state: req.finalState });
     } else {
       res.status(404).send('Not found');
     }
   });
 });
 
-app.use((req, res, next) => {
-  if (!req.session) {
-    return next(new Error('no session, boo!'));
-  }
-  next();
-});
-
 router.get('/', (req, res) => {
-  let name;
-  if (req.session) {
-    name = req.session.name;
-  }
   const store = configureStore();
 
   match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
@@ -139,25 +112,14 @@ router.get('/', (req, res) => {
       req.renderedHtml = html;
       req.finalState = finalState;
 
-      res.render('index', { user: name, html: req.renderedHtml, state: req.finalState });
+      res.render('index', { html: req.renderedHtml, state: req.finalState });
     } else {
       res.status(404).send('Not found');
     }
   });
 });
 
-router.get('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.log('session destroy error');
-    } else {
-      res.redirect('/');
-    }
-  });
-});
-
 app.use('/', router);
-app.use('/login', authRouter);
 app.use('/api', apiRouter);
 
 const server = app.listen(3000, () => {
