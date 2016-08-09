@@ -7,13 +7,15 @@ router.get('/search/:series/:name/:arch', (req, res, next) => {
   if (req.app.locals.macaroonAuthHeader) {
     auth = req.app.locals.macaroonAuthHeader;
   }
+
   cpi.search(req.params.name, function(result) {
     req.body = result;
     next();
   }, {
     series: req.params.series,
     arch: req.params.arch,
-    auth: auth
+    auth: auth,
+    fuzzy: req.query.fuzzy
   });
 
 }, function(req, res) {

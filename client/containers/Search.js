@@ -3,19 +3,25 @@ import { connect } from 'react-redux';
 import pluralize from 'pluralize';
 import {
   fetchQuerySnapsIfNeeded,
+  isFuzzy,
   selectArch,
   selectQuery
 } from '../actions';
+import Fuzzy from '../components/Fuzzy';
 import Snaps from '../components/Snaps';
 import Query from '../components/Query';
 import ArchPicker from '../components/Arch';
-import { ARCH_OPTIONS } from '../config';
+import {
+  ARCH_OPTIONS,
+  FUZZY_SEARCH
+} from '../config';
 
 class Search extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleArchChange = this.handleArchChange.bind(this);
+    this.handleFuzzyChange = this.handleFuzzyChange.bind(this);
   }
 
   componentDidMount() {
@@ -23,29 +29,38 @@ class Search extends Component {
       dispatch,
       selectedQuery,
       selectedArch,
+      beFuzzy
     } = this.props;
+
     dispatch(
       fetchQuerySnapsIfNeeded(
         selectedQuery,
-        selectedArch
-      ));
+        selectedArch,
+        beFuzzy
+      )
+    );
   }
 
   componentWillReceiveProps(nextProps) {
     if (
       nextProps.selectedQuery !== this.props.selectedQuery ||
-      nextProps.selectedArch !== this.props.selectedArch
+      nextProps.selectedArch !== this.props.selectedArch ||
+      nextProps.beFuzzy !== this.props.beFuzzy
     ) {
       const {
         dispatch,
         selectedQuery,
-        selectedArch
+        selectedArch,
+        beFuzzy
       } = nextProps;
 
       dispatch(
         fetchQuerySnapsIfNeeded(
           selectedQuery,
-          selectedArch));
+          selectedArch,
+          beFuzzy
+        )
+      );
     }
   }
 
@@ -57,11 +72,15 @@ class Search extends Component {
     this.props.dispatch(selectArch(next));
   }
 
+  handleFuzzyChange(next) {
+    this.props.dispatch(isFuzzy(next));
+  }
 
   render() {
     const {
       selectedArch,
       selectedQuery,
+      beFuzzy,
       snaps
       } = this.props;
 
@@ -83,17 +102,17 @@ class Search extends Component {
                   options={ ARCH_OPTIONS }
                 />
               </div>
+              <div className={'u_1_4'}>
+                <Fuzzy
+                  value={ FUZZY_SEARCH }
+                  onChange={this.handleFuzzyChange}
+                  checked={ beFuzzy }
+                />
+              </div>
             </div>
           </div>
         </div>
-        <div className={'b-cli'}>
-          <div className={'b-cli__wrap'}>
-            user@{selectedArch} $ snap find {selectedQuery} --fuzzy
-          </div>
-        </div>
-        <div className={'b-package-search__wrap'}>
-          <Snaps snaps={snaps} arch={selectedArch} onClick={this.handleClick}/>
-        </div>
+        <Snaps snaps={snaps} arch={selectedArch} onClick={this.handleClick}/>
       </div>
     );
   }
@@ -104,6 +123,7 @@ Search.propTypes = {
   selectedArch: PropTypes.string.isRequired,
   snaps: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
+  beFuzzy: PropTypes.bool.isRequired,
   lastUpdated: PropTypes.number,
   dispatch: PropTypes.func.isRequired
 };
@@ -112,6 +132,7 @@ function mapStateToProps(state) {
   const {
     selectedArch,
     selectedQuery,
+    beFuzzy,
     snapsFromQuery} = state;
   const {
     isFetching,
@@ -125,6 +146,7 @@ function mapStateToProps(state) {
   return {
     selectedQuery,
     selectedArch,
+    beFuzzy,
     snaps,
     isFetching,
     lastUpdated

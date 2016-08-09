@@ -1,41 +1,29 @@
 import { routerReducer as routing } from 'react-router-redux';
 import { combineReducers } from 'redux';
-import {
-  RECEIVE_QUERY_SNAPS,
-  RECEIVE_SNAP,
-  REQUEST_QUERY_SNAPS,
-  REQUEST_SNAP,
-  SELECT_ARCH,
-  SELECT_CHANNEL,
-  SELECT_CONFINEMENT,
-  SELECT_QUERY
-} from '../actionTypes';
+import * as defaults from '../config';
+import * as types from '../actionTypes';
 
-const DEFAULT_ARCH = 'amd64';
-const DEFAULT_CHANNEL = 'stable';
-const DEFAULT_CONFINEMENT = 'strict';
-
-function selectedArch(state=DEFAULT_ARCH, action) {
+function selectedArch(state=defaults.DEFAULT_ARCH, action) {
   switch (action.type) {
-  case SELECT_ARCH:
+  case types.SELECT_ARCH:
     return action.arch;
   default:
     return state;
   }
 }
 
-function selectedChannel(state=DEFAULT_CHANNEL, action) {
+function selectedChannel(state=defaults.DEFAULT_CHANNEL, action) {
   switch (action.type) {
-  case SELECT_CHANNEL:
+  case types.SELECT_CHANNEL:
     return action.channel;
   default:
     return state;
   }
 }
 
-function selectedConfinement(state=DEFAULT_CONFINEMENT, action) {
+function selectedConfinement(state=defaults.DEFAULT_CONFINEMENT, action) {
   switch (action.type) {
-  case SELECT_CONFINEMENT:
+  case types.SELECT_CONFINEMENT:
     return action.confinement;
   default:
     return state;
@@ -44,8 +32,17 @@ function selectedConfinement(state=DEFAULT_CONFINEMENT, action) {
 
 function selectedQuery(state='', action) {
   switch (action.type) {
-  case SELECT_QUERY:
+  case types.SELECT_QUERY:
     return action.query;
+  default:
+    return state;
+  }
+}
+
+function beFuzzy(state=defaults.DEFAULT_FUZZY, action) {
+  switch (action.type) {
+  case types.IS_FUZZY:
+    return action.isFuzzy;
   default:
     return state;
   }
@@ -56,13 +53,13 @@ function snapsFromQuery(state = {
   items: []
 }, action) {
   switch (action.type) {
-  case REQUEST_QUERY_SNAPS:
+  case types.REQUEST_QUERY_SNAPS:
     return {
       ...state,
       isFetching: true,
     };
 
-  case RECEIVE_QUERY_SNAPS:
+  case types.RECEIVE_QUERY_SNAPS:
     return {
       ...state,
       isFetching: false,
@@ -76,12 +73,12 @@ function snapsFromQuery(state = {
 
 function snap(state = {}, action) {
   switch (action.type) {
-  case REQUEST_SNAP:
+  case types.REQUEST_SNAP:
     return {
       ...state,
       isFetching: true
     };
-  case RECEIVE_SNAP:
+  case types.RECEIVE_SNAP:
     return {
       ...state,
       isFetching: false,
@@ -96,8 +93,8 @@ function snap(state = {}, action) {
 // FIXME snapByAlias ?
 function snapById(state = {}, action) {
   switch (action.type) {
-  case REQUEST_SNAP:
-  case RECEIVE_SNAP:
+  case types.REQUEST_SNAP:
+  case types.RECEIVE_SNAP:
       // FIXME snap_id is not unique across revision
     return {...state, [action.id]: snap(state[action.id], action)};
   default:
@@ -112,6 +109,7 @@ const rootReducer = combineReducers({
   selectedChannel,
   selectedQuery,
   selectedArch,
+  beFuzzy,
   routing
 });
 

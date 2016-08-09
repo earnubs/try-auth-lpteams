@@ -44,8 +44,10 @@ a:active {
 
 .b-package-data__link {
   text-decoration:none;
-  margin-bottom:1em;
+  padding-bottom:0.6em;
+  margin-bottom:0.6em;
   display:block;
+  border-bottom: 1px solid rgb(0, 60, 79);
 }
 
 .b-package-data__title {
@@ -63,8 +65,7 @@ a:active {
 
 .b-package-data__title_headline {
   color: #bedb39;
-  font-size: 28px;
-  font-weight: 500;
+  font-size: 24px;
   letter-spacing: 0.8px;
 }
 
@@ -120,6 +121,15 @@ a:active {
   padding: 1em;
   margin: 0 0 1em 0;
   color: #1f8a70;
+  white-space: pre ;
+  display: block;
+  unicode-bidi: embed;
+  font-family: monospace;
+}
+
+.b-cli a {
+  color: #1f8a70;
+  text-decoration: none;
 }
 
 /** @define b-query; **/

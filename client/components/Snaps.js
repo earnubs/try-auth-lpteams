@@ -8,13 +8,15 @@ export default class Snaps extends Component {
       <div className={'b-package-data'}>
         {snaps.map((snap, i) =>
           <Link to={`/snap/${snap.alias}/16/${arch}/`} key={i} className={'b-package-data__link'}>
-            <div className={'b-package-data__title b-package-data__title_compact'}>
-              <div className={'b-package-data__title_headline'}>
-                {snap.title} {snap.version}
+            <div className={'b-package-data__wrap'}>
+              <div className={'b-package-data__title b-package-data__title_compact'}>
+                <div className={'b-package-data__title_headline'}>
+                  {snap.title} {snap.version}
+                </div>
+                <div>{snap.publisher}</div>
               </div>
-              <div>{snap.publisher}</div>
+              <div className={'b-package-data__item'}>{snap.summary}</div>
             </div>
-            <div className={'b-package-data__item'}>{snap.summary}</div>
           </Link>
         )}
       </div>

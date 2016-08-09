@@ -104,11 +104,6 @@ class SnapDetail extends Component {
             </div>
           </div>
         </div>
-        <div className={'b-cli'}>
-          <div className={'b-cli__wrap'}>
-            $ snap install --edge --devmode
-          </div>
-        </div>
         {snap ? <Snap snap={snap} /> : <div>Accessing…</div>}
       </div>
     );

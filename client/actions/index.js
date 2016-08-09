@@ -1,62 +1,59 @@
 import fetch from 'isomorphic-fetch';
-
-import {
-  REQUEST_QUERY_SNAPS,
-  RECEIVE_QUERY_SNAPS,
-  REQUEST_SNAP,
-  RECEIVE_SNAP,
-  SELECT_ARCH,
-  SELECT_CHANNEL,
-  SELECT_CONFINEMENT,
-  SELECT_SERIES,
-  SELECT_QUERY,
-} from '../actionTypes';
+import * as types from '../actionTypes';
+import {API_DETAIL, API_SEARCH} from '../config';
 
 export function selectSeries(series) {
   return {
-    type: SELECT_SERIES,
+    type: types.SELECT_SERIES,
     series
   };
 }
 
 export function selectArch(arch) {
   return {
-    type: SELECT_ARCH,
+    type: types.SELECT_ARCH,
     arch
   };
 }
 
 export function selectChannel(channel) {
   return {
-    type: SELECT_CHANNEL,
+    type: types.SELECT_CHANNEL,
     channel
   };
 }
 
 export function selectConfinement(confinement) {
   return {
-    type: SELECT_CONFINEMENT,
+    type: types.SELECT_CONFINEMENT,
     confinement
   };
 }
 
 export function selectQuery(query) {
   return {
-    type: SELECT_QUERY,
+    type: types.SELECT_QUERY,
     query
+  };
+}
+
+export function isFuzzy(isFuzzy) {
+  return {
+    type: types.IS_FUZZY,
+    isFuzzy
   };
 }
 
 export function requestQuerySnaps(query) {
   return {
-    type: REQUEST_QUERY_SNAPS,
+    type: types.REQUEST_QUERY_SNAPS,
     query
   };
 }
 
 export function receiveQuerySnaps(query, json) {
   return {
-    type: RECEIVE_QUERY_SNAPS,
+    type: types.RECEIVE_QUERY_SNAPS,
     query,
     snaps: json,
     receivedAt: Date.now()
@@ -65,27 +62,33 @@ export function receiveQuerySnaps(query, json) {
 
 export function requestSnap(id) {
   return {
-    type: REQUEST_SNAP,
+    type: types.REQUEST_SNAP,
     id
   };
 }
 
 export function receiveSnap(id, json) {
   return {
-    type: RECEIVE_SNAP,
+    type: types.RECEIVE_SNAP,
     id,
     snap: json,
     receivedAt: Date.now()
   };
 }
 
-function fetchQuerySnaps(query, arch) {
+function fetchQuerySnaps(query, arch, isFuzzy) {
   query = encodeURIComponent(query);
   arch = encodeURIComponent(arch);
 
+  let url = `${API_SEARCH}/16/${query}/${arch}`;
+
+  if (isFuzzy) {
+    url += '?fuzzy=true';
+  }
+
   return dispatch => {
     dispatch(requestQuerySnaps(query));
-    return fetch(`http://localhost:3000/api/search/16/${query}/${arch}`)
+    return fetch(url)
       .then(response => {
         return response.json();
       })
@@ -107,10 +110,10 @@ function shouldFetchQuerySnaps(query, state) {
   return true;
 }
 
-export function fetchQuerySnapsIfNeeded(query, arch) {
+export function fetchQuerySnapsIfNeeded(query, arch, isFuzzy) {
   return (dispatch, getState) => {
     if (shouldFetchQuerySnaps(query, getState())) {
-      return dispatch(fetchQuerySnaps(query, arch));
+      return dispatch(fetchQuerySnaps(query, arch, isFuzzy));
     }
   };
 }
@@ -124,7 +127,7 @@ function fetchSnap(id, arch, channel, confinement) {
   };
 }
 
-function shouldFetchSnap(id, state) {
+function shouldFetchSnap(/** id, state **/) {
   /** FIXME snap_id is not unique across revision
   const snap = state.snapById[id];
 
