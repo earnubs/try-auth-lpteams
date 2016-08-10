@@ -45,7 +45,6 @@ app.use(methodOverride());
 router.get('/snap/:series/:arch/:id', (req, res, next) => {
   cpi.snap(req.params.id, function(result) {
     req.body = result;
-    console.log(req.body);
     next();
   }, {
     series: req.params.series,

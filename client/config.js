@@ -11,11 +11,12 @@ const DEFAULT_SERIES = SERIES_OPTIONS[0];
 const DEFAULT_FUZZY = true;
 const DEFAULT_QUERY = '';
 
-const API_HOST = process.env.HOST || 'localhost:3000';
-const API_SEARCH = `//${API_HOST}/api/search`;
-const API_DETAIL = `//${API_HOST}/api/details`;
+const API_HOST_URL = process.env.HOST_URL || `${window.location.protocol}//${window.location.host}`;
+const API_SEARCH = `${API_HOST_URL}/api/search`;
+const API_DETAIL = `${API_HOST_URL}/api/details`;
 
 export {
+  API_HOST_URL,
   API_DETAIL,
   API_SEARCH,
   ARCH_OPTIONS,

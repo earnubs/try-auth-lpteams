@@ -3,6 +3,8 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
+import { API_HOST_URL } from '../../client/config';
+
 import * as actions from '../../client/actions';
 import * as types from '../../client/actionTypes';
 
@@ -107,10 +109,10 @@ describe('Action creators suite', () => {
 
     it('fetchQuerySnapsIfNeeded success, empty results', () => {
 
-      const [series, arch, query] = ['foo', 16, 'amd64'];
+      const [series, arch, query] = [16, 'amd64', 'mypackage'];
 
-      nock('http://localhost:3000/')
-        .get(`/api/search/${series}/${arch}/${query}`)
+      nock(`${API_HOST_URL}`)
+        .get('/api/search/16/amd64/mypackage')
         .reply(200, []);
 
 
