@@ -11,8 +11,9 @@ const DEFAULT_SERIES = SERIES_OPTIONS[0];
 const DEFAULT_FUZZY = true;
 const DEFAULT_QUERY = '';
 
-const API_SEARCH = '/api/search';
-const API_DETAIL = '/api/details';
+const API_HOST = process.env.HOST || 'localhost:3000';
+const API_SEARCH = `//${API_HOST}/api/search`;
+const API_DETAIL = `//${API_HOST}/api/details`;
 
 export {
   API_DETAIL,

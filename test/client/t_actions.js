@@ -1,4 +1,4 @@
-import expect, { createSpy, spyOn, isSpy } from 'expect';
+import expect  from 'expect';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
