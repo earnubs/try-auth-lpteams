@@ -1,5 +1,7 @@
 'use strict';
+import React from 'react';
 import express, { Router } from 'express';
+import helmet from 'helmet';
 import methodOverride from 'method-override';
 import morgan from 'morgan';
 import nunjucks from 'nunjucks';
@@ -7,14 +9,11 @@ import util from 'util';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
-
-import React from 'react';
-import { renderToString } from 'react-dom/server';
 import { Provider } from 'react-redux';
 import { match, RouterContext } from 'react-router';
+import { renderToString } from 'react-dom/server';
 
 import configureStore from '../client/store/configureStore';
-
 import apiRouter from './api.js';
 import config from '../webpack.config';
 import cpi from '../lib/cpi';
@@ -24,6 +23,8 @@ const router = Router();
 
 const app = express();
 const compiler = webpack(config);
+
+app.use(helmet());
 
 app.use(webpackDevMiddleware(compiler, {
   hot: true,
@@ -44,6 +45,7 @@ app.use(methodOverride());
 router.get('/snap/:series/:arch/:id', (req, res, next) => {
   cpi.snap(req.params.id, function(result) {
     req.body = result;
+    console.log(req.body);
     next();
   }, {
     series: req.params.series,
