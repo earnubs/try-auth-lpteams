@@ -30,8 +30,19 @@ a:active {
 .b-nav {
   font-size: 11px;
   text-transform: uppercase;
-  text-align:right;
-  padding:0.9em;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.1);
+}
+
+.b-nav__homelink {
+}
+
+.b-nav__homelink a {
+  display:inline-block;
+  padding:0.9em 1.8em;
+  text-decoration:none;
+  color: #1f8a70;
+  background-color: rgba(0,0,0,0.2);
 }
 
 /** @define b-package-data **/
@@ -106,7 +117,7 @@ a:active {
 .b-filter {
   background-color: #003c4f;
   padding: 1em;
-  margin: 1em 0;
+  margin: 0 0 1em 0;
 }
 
 .b-filter__result {

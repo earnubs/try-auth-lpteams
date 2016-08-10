@@ -5,17 +5,6 @@
     <link rel=stylesheet href="/static/all.css" />
   </head>
   <body>
-    <!--
-    <div class="b-nav">
-      <div class="b-nav__wrap">
-        {% if not user %}
-        <a href="/login">Log In</a>
-        {% else %}
-        <a href="/logout">Log out {{user}}</a>
-        {% endif %}
-      </div>
-    </div>
-    -->
     {% block content %}{% endblock %}
     <div id="root" style="height:100%;">{{html|safe}}</div>
     <script>
