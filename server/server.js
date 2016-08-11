@@ -15,7 +15,7 @@ import { renderToString } from 'react-dom/server';
 
 import configureStore from '../client/store/configureStore';
 import apiRouter from './api.js';
-import config from '../webpack.config';
+import config from '../webpack.prod.config';
 import cpi from '../lib/cpi';
 import routes from '../client/routes';
 
@@ -26,11 +26,13 @@ const compiler = webpack(config);
 
 app.use(helmet());
 
-app.use(webpackDevMiddleware(compiler, {
-  hot: true,
-  noInfo: true,
-  publicPath: config.output.publicPath }));
-app.use(webpackHotMiddleware(compiler));
+if (!(process.env.NODE_ENV === 'production')) {
+  app.use(webpackDevMiddleware(compiler, {
+    hot: true,
+    noInfo: true,
+    publicPath: config.output.publicPath }));
+  app.use(webpackHotMiddleware(compiler));
+}
 app.use(express.static('public'));
 
 nunjucks.configure('views', {

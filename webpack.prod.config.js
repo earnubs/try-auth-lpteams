@@ -3,9 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: [
-    'webpack-hot-middleware/client',
-    'webpack/hot/only-dev-server',
-    './client/index',
+    './client/index'
   ],
   output: {
     path: path.join(__dirname, 'public/static'),
@@ -13,15 +11,20 @@ module.exports = {
     publicPath: '/static/'
   },
   plugins: [
+    new webpack.IgnorePlugin(/\.\/dev/, /\/config$/),
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
+    }),
   ],
   module: {
     loaders: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loaders: ['react-hot', 'babel'],
+        loaders: ['babel'],
       }
     ]
   }
