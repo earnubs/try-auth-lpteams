@@ -113,6 +113,10 @@ function shouldFetchQuerySnaps(query, state) {
 
 export function fetchQuerySnapsIfNeeded(series, arch, query, isFuzzy) {
   return (dispatch, getState) => {
+    // clear the list if the query is empty
+    if (!query.length) {
+      dispatch(receiveQuerySnaps('', []));
+    }
     if (shouldFetchQuerySnaps(query, getState())) {
       return dispatch(fetchQuerySnaps(series, arch, query, isFuzzy));
     }
