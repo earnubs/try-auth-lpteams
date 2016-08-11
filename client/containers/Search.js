@@ -92,13 +92,17 @@ class Search extends Component {
   render() {
     const {
       beFuzzy,
+      isFetching,
       selectedArch,
       selectedQuery,
       selectedSeries,
       snaps
       } = this.props;
 
-    let found = <div className="b-filter__result">Found {snaps.length || 0} {pluralize('snap', snaps.length)} for "{selectedQuery}" in {selectedArch}, series 16.</div>;
+    const foundTxt = isFetching ? 'Searching '
+      : `Found ${snaps.length || 0} ${pluralize('snap', snaps.length)} `;
+
+    const found = <div className="b-filter__result">{foundTxt} for "{selectedQuery}" in {selectedArch}, series 16.</div>;
 
     return (
       <div className={'b-package-search'}>
@@ -106,7 +110,9 @@ class Search extends Component {
           <div className={'b-filter__wrap'}>
             <div className={'grid'}>
               <div className={'u_1_2'}>
-                <Query value={selectedQuery} onChange={this.handleChange} />
+                <Query
+                  value={selectedQuery}
+                  onChange={this.handleChange} />
                 {found}
               </div>
               <div className={'u_1_4'}>

@@ -23,11 +23,11 @@ export default class Query extends Component {
           onKeyDown={e => this.handleKeyDown(e.which, e.target.value)}
           value={value} />
       </div>
-    )
+    );
   }
-};
+}
 
 Query.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired
-}
+};
