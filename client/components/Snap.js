@@ -12,14 +12,14 @@ export default class Snap extends Component {
         <div className={'b-package-data__wrap'}>
           <div className={'b-package-data__title'}><span className={'b-package-data__revision'}>#{snap.revision}</span> <span className={'b-package-data__version'}>{snap.version}</span> {byteSize(snap.binary_filesize, { units: 'iec' })}</div>
           <p>{snap.description}</p>
-          <div className="b-package-data__item">Published <b>{moment(snap.date_published).format('MMMM Do YYYY, h:mm:ss a')}</b>, ({moment(snap.date_published).fromNow()})</div>
+          <div className="b-package-data__item">Published <b>{moment(snap.date_published).utc().format('MMMM Do YYYY, h:mm:ss a')}</b>, ({moment(snap.date_published).utc().fromNow()})</div>
           <div className="b-package-data__item">
             Licensed under <b>{snap.license} licence</b>
           </div>
           <div className="b-package-data__item">Support URL&nbsp;
             <a href={snap.support_url}>{snap.support_url}</a>
           </div>
-          <div className="b-package-data__item">Last Updated <b>{moment(snap.last_updated).format('MMMM Do YYYY, h:mm:ss a')}</b>, ({moment(snap.last_updated).fromNow()})</div>
+          <div className="b-package-data__item">Last Updated <b>{moment(snap.last_updated).utc().format('MMMM Do YYYY, h:mm:ss a')}</b>, ({moment(snap.last_updated).utc().fromNow()})</div>
 
           <div className={'b-package-data__item'}></div>
           <div className={'b-package-data__item'}><a href={snap.anon_download_url}>Anon. download</a></div>
